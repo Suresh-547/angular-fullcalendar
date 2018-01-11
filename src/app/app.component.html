@@ -1,0 +1,16 @@
+<div class="container">
+  <button mat-raised-button class="pull-right" style="margin-top: 12px; background-color: #EBEBEB; left: 145px;" (click)="addEvent()">New Event</button>
+</div>
+
+
+
+<div *ngIf="calendarOptions" style="padding: 15px;">
+    <ng-fullcalendar 
+    	#ucCalendar [options]="calendarOptions" 
+    	(eventClick)="eventClick($event.detail)" 
+    	(eventDrop)="updateEvent($event.detail)"
+        (eventResize)="updateEvent($event.detail)" 
+        (clickButton)="clickButton($event.detail)"
+        >
+    </ng-fullcalendar>
+</div>
