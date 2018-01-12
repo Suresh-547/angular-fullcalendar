@@ -8,3 +8,32 @@
 @import '../node_modules/font-awesome/css/font-awesome.css';
 
 
+.event-b-g {
+  background: #000!important;
+}
+
+
+.event-color{
+   color: #FCC938;
+}
+.task-color{
+  color: #00BD9B;
+}
+.followup-color{
+  color: #5FA4DC;
+}
+.cus-event-bg {
+	background-color: #FCC938;
+}
+.cus-task-bg {
+	background-color: #00BD9B;
+}
+
+.cus-followup-bg {
+	background-color: #5FA4DC;
+}
+
+/*.fc-event{
+	color: #000;
+	border: none;
+}*/

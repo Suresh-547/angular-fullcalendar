@@ -87,10 +87,6 @@ pre {
   padding: 50% 0;
 }
 
-.icon-background{
-    cursor: pointer;
-    padding: 10px;
-    background: #B6B6B6;
-    color: red;
-    border-radius: 22px;
+.button-bc{
+  background-color:  #EBEBEB;
 }

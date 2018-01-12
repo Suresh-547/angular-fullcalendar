@@ -4,7 +4,7 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { CalendarComponent } from 'ng-fullcalendar';
 import { Options } from 'fullcalendar';
 import { EventSesrvice } from './event.service';
-
+import * as $ from 'jquery';
 
 
 @Component({
@@ -18,6 +18,9 @@ export class AppComponent implements OnInit {
     data = {};
     calendarOptions: Options;
     displayEvent: any;
+
+    
+
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     constructor(  
       protected eventService: EventSesrvice, 
@@ -37,6 +40,9 @@ export class AppComponent implements OnInit {
           events: data
         };
       });
+      // setTimeout(function(){
+      //   $(".fc-event").addClass("cus-event-bg");
+      // }, 150);
     }
 
     addEvent() {
@@ -59,7 +65,16 @@ export class AppComponent implements OnInit {
     if (model.event.start) {_startDate = new FormControl(model.event.start._d); }
     if (model.event.end) {_endDate = new FormControl(model.event.end._d); }
 
-    model = {event: {id: model.event.id, start: model.event.start, startDate: _startDate, end: model.event.end, endDate: _endDate ? _endDate : _startDate, title: model.event.title, allDay: model.event.allDay }, duration: {} }
+    model = {event: {
+      id: model.event.id, 
+      start: model.event.start, 
+      startDate: _startDate, 
+      end: model.event.end, 
+      endDate: _endDate ? _endDate : _startDate, 
+      title: model.event.title, 
+      allDay: model.event.allDay,
+      type: model.event.type
+    }, duration: {} }
 
     this.displayEvent = model;
 
@@ -69,6 +84,8 @@ export class AppComponent implements OnInit {
   }
 
   updateEvent(model: any) {
+    // $(".fc-event").addClass("cus-event-bg");
+    console.log(model);
     model = {
       event: {
         id: model.event.id,
@@ -93,19 +110,10 @@ export class AppComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
-
-
-
 @Component({
   selector: 'dialog-data-example-dialog',
   templateUrl: 'dialog.html',
+  styleUrls: ['./app.component.css']
 })
 export class DialogDataExampleDialog implements OnInit {
 
@@ -149,7 +157,8 @@ export class DialogDataExampleDialog implements OnInit {
 
               obj.title = this.data.title; 
               obj.start = this.data.startDate.value.getTime(); 
-              obj.end = this.data.endDate.value.getTime();      
+              obj.end = this.data.endDate.value.getTime();
+              obj.type = this.data.type      
           }
         });        
       }
