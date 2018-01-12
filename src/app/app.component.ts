@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {FormControl} from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { CalendarComponent } from 'ng-fullcalendar';
 import { Options } from 'fullcalendar';
 import { EventSesrvice } from './event.service';
@@ -44,6 +44,7 @@ export class AppComponent implements OnInit {
       this.dialog.open(DialogDataExampleDialog, {
         data: {
           title: "", 
+          new:true,
           startDate:{value: new Date()}, 
           endDate: {value: new Date()}}
       });
@@ -112,7 +113,10 @@ export class DialogDataExampleDialog implements OnInit {
    time = {};   
    timeOptions = [];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, protected eventService: EventSesrvice ) {}
+  constructor(    
+    public dialogRef: MatDialogRef<DialogDataExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any, 
+    protected eventService: EventSesrvice ) {}
 
     ngOnInit(){
       for(let i = 0; i<=30; i++){
@@ -120,7 +124,12 @@ export class DialogDataExampleDialog implements OnInit {
       }
     }
 
+    closeDialog(): void {
+      this.dialogRef.close();
+    }    
+
     addUpdateEvent(addEvent) {
+
       let eventData = JSON.parse(localStorage.getItem('eventData'));
 
       if (addEvent) {
@@ -148,4 +157,18 @@ export class DialogDataExampleDialog implements OnInit {
       localStorage.setItem('eventData', JSON.stringify(eventData));
       window.location.reload();    
   } 
+
+  deleteEvent(id) {
+    if(confirm("Are you sure to delete")) {
+      let eventData = JSON.parse(localStorage.getItem('eventData'));
+      eventData.forEach((o, i)=> {
+        if (o.id == this.data.id) {
+            eventData.splice(i, 1);
+        }
+      });
+      localStorage.setItem('eventData', JSON.stringify(eventData));
+      window.location.reload();      
+      // this.closeDialog();
+    }
+  }
 }
