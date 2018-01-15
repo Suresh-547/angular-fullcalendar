@@ -37,6 +37,7 @@ export class EventSesrvice {
             start: this.newDate().setDate(this.newDate().getDate()+3),
             end: this.newDate().setDate(this.newDate().getDate()+3)
         },
+       
         {
             id: 4,
             title: 'Repeating Event',
@@ -49,6 +50,12 @@ export class EventSesrvice {
             start: this.newDate().setDate(this.newDate().getDate()-2),
             end: this.newDate().setDate(this.newDate().getDate()-1)
         },
+        {
+            id: 6,
+            title: 'Repeating Event',
+            start: this.newDate().setDate(this.newDate().getDate()+4),
+            end: this.newDate().setDate(this.newDate().getDate()+4)
+        },         
         // {
         //     id:6,
         //     title: 'Meeting',
