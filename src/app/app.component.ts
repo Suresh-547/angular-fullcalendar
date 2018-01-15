@@ -40,9 +40,6 @@ export class AppComponent implements OnInit {
           events: data
         };
       });
-      // setTimeout(function(){
-      //   $(".fc-event").addClass("cus-event-bg");
-      // }, 150);
     }
 
     addEvent() {
@@ -84,8 +81,6 @@ export class AppComponent implements OnInit {
   }
 
   updateEvent(model: any) {
-    // $(".fc-event").addClass("cus-event-bg");
-
     model = {
       event: {
         id: model.event.id,
@@ -97,7 +92,18 @@ export class AppComponent implements OnInit {
         _data: model.duration._data
       }
     }
+
     this.displayEvent = model;
+
+    let eventData = JSON.parse(localStorage.getItem('eventData'));
+    eventData.forEach((o, i)=> {
+      if (o.id == model.event.id) {
+          o.title = model.event.title; 
+          o.start = model.event.start._d.getTime(); 
+          o.end = model.event.end ? model.event.end._d.getTime() : model.event.start._d.getTime();  
+      }
+    });
+    localStorage.setItem('eventData', JSON.stringify(eventData));       
   }
 
   clickButton(model: any) {
@@ -177,7 +183,6 @@ export class DialogDataExampleDialog implements OnInit {
       });
       localStorage.setItem('eventData', JSON.stringify(eventData));
       window.location.reload();      
-      // this.closeDialog();
     }
   }
 }

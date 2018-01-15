@@ -23,14 +23,17 @@
   color: #5FA4DC;
 }
 .cus-event-bg {
-	background-color: #FCC938;
+	background-color: #FCC938!important;
+	border: 1px solid #FCC938;
 }
 .cus-task-bg {
-	background-color: #00BD9B;
+	background-color: #00BD9B!important;
+	border: 1px solid #00BD9B;
 }
 
 .cus-followup-bg {
-	background-color: #5FA4DC;
+	background-color: #5FA4DC!important;
+	border: 1px solid #5FA4DC;
 }
 
 /*.fc-event{
