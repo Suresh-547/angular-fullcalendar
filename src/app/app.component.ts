@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
 
   updateEvent(model: any) {
     // $(".fc-event").addClass("cus-event-bg");
-    console.log(model);
+
     model = {
       event: {
         id: model.event.id,
