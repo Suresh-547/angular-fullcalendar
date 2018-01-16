@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { CalendarComponent } from 'ng-fullcalendar';
-import { Options } from 'fullcalendar';
 import { EventSesrvice } from './event.service';
 import * as $ from 'jquery';
 
@@ -16,7 +15,7 @@ import * as $ from 'jquery';
 export class AppComponent implements OnInit {
 
     data = {};
-    calendarOptions: Options;
+    calendarOptions;
     displayEvent: any;    
 
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
@@ -177,7 +176,7 @@ export class AppComponent implements OnInit {
 })
 export class DialogDataExampleDialog implements OnInit {
 
-   calendarOptions: Options;   
+   calendarOptions;   
    time = {};   
 
   constructor(    
