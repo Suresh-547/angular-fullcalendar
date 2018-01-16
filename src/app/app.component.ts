@@ -19,9 +19,8 @@ export class AppComponent implements OnInit {
     displayEvent: any;    
 
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
-    constructor(  
-      protected eventService: EventSesrvice, 
-      public dialog: MatDialog) { }
+
+    constructor(protected eventService: EventSesrvice, public dialog: MatDialog) { }
 
     ngOnInit() {   
       this.eventService.saveLocalStorage();
@@ -44,8 +43,8 @@ export class AppComponent implements OnInit {
       this.dialog.open(DialogDataExampleDialog, {
         data: {
           title: "", 
-          new:true,
-          startDate:{value: new Date()}, 
+          new: true,
+          startDate: {value: new Date()}, 
           endDate: {value: new Date()}}
       });
     }
@@ -54,24 +53,19 @@ export class AppComponent implements OnInit {
 
   eventClick(model: any) {
     
-    let _endDate, _startDate;
+    let _startDate, _endDate;
 
-    if (model.event.start) {_startDate = new FormControl(model.event.start._d); }
-    if (model.event.end) {_endDate = new FormControl(model.event.end._d); }
+    if (model.event.start) {_startDate = new FormControl(model.event.start._d)}
 
-    model = {event: {
-      id: model.event.id, 
-      start: model.event.start, 
-      startDate: _startDate, 
-      end: model.event.end, 
-      endDate: _endDate ? _endDate : _startDate, 
-      title: model.event.title, 
-      allDay: model.event.allDay,
-      type: model.event.type
-    }, duration: {} }
+    if (model.event.end) {
+      _endDate = new FormControl(model.event.end._d); 
+    }else{
+      _endDate = new FormControl(new Date(_startDate.value.getTime()));
+    }
+
+    model = {event: {id: model.event.id, start: model.event.start, startDate: _startDate, end: model.event.end, endDate: _endDate, title: model.event.title, allDay: model.event.allDay, type: model.event.type }, duration: {} }
 
     this.displayEvent = model;
-
     this.dialog.open(DialogDataExampleDialog, {
       data: model.event
     });    
@@ -79,86 +73,75 @@ export class AppComponent implements OnInit {
 
 
   eventResize(model: any, type: string) {
-      model = {event: {id: model.event.id, start: model.event.start, end: model.event.end, title: model.event.title }, duration: {_data: model.duration._data } };
 
+      model = this.initModel(model);
       this.displayEvent = model;
       let eventData = JSON.parse(localStorage.getItem('eventData'));
 
-      
       eventData.forEach((o) => {
-
           if (o.id == model.event.id) {
-
-              let start, end, _duration = model.duration._data, _event = model.event;
-              let seconds = _duration.seconds, 
-                  milliseconds = _duration.milliseconds,
-                  minutes = _duration.minutes, 
-                  hours = _duration.hours,
-                  days = _duration.days;
-
+              let start, end, _duration = model.duration._data;
                   start = o.start;
-                  end = new Date(o.end);
-                  end.setMilliseconds(end.getMilliseconds() + _duration.milliseconds);
-                  end.setSeconds(end.getSeconds() + _duration.seconds);
-                  end.setMinutes(end.getMinutes() + _duration.minutes);
-                  end.setHours(end.getHours() + _duration.hours);
-
+                  end = this.updateDate(o.end, _duration);
                   o.title = model.event.title;
                   o.start = start;
                   o.end = end;
           }
       });
-
       localStorage.setItem('eventData', JSON.stringify(eventData));
   }
 
   updateEvent(model: any, type: string) {
 
-      model = {event: {id: model.event.id, start: model.event.start, end: model.event.end, title: model.event.title }, duration: {_data: model.duration._data } };
+      model = this.initModel(model);
 
       this.displayEvent = model;
       let eventData = JSON.parse(localStorage.getItem('eventData'));
 
-      
       eventData.forEach((o) => {
 
           if (o.id == model.event.id) {
 
               let start, end, _duration = model.duration._data, _event = model.event;
-              let seconds = _duration.seconds, 
-                  milliseconds = _duration.milliseconds,
-                  minutes = _duration.minutes, 
-                  hours = _duration.hours,
-                  days = _duration.days,
-                  months = _duration.months;
-
               if (!_event.end || _event.start._d.getTime() == _event.end._d.getTime()) {
                   end = _event.start._d.setMinutes(_event.start._d.getMinutes()+30)
               }
-                  start = new Date(o.start);
-                  start.setMilliseconds(start.getMilliseconds() + _duration.milliseconds);
-                  start.setSeconds(start.getSeconds() + _duration.seconds);
-                  start.setMinutes(start.getMinutes() + _duration.minutes);
-                  start.setHours(start.getHours() + _duration.hours);
-                  start.setDate(start.getDate() + _duration.days);
-                  start.setMonth(start.getMonth() + _duration.months);
-
-                  end = new Date(o.end);
-                  end.setMilliseconds(end.getMilliseconds() + _duration.milliseconds);
-                  end.setSeconds(end.getSeconds() + _duration.seconds);
-                  end.setMinutes(end.getMinutes() + _duration.minutes);
-                  end.setHours(end.getHours() + _duration.hours);
-                  end.setDate(end.getDate() + _duration.days);
-                  end.setMonth(end.getMonth() + _duration.months);                  
-
+                  start = this.updateDate(o.start, _duration);              
+                  end = this.updateDate(o.end, _duration);
                   o.title = model.event.title;
                   o.start = start;
                   o.end = end;
           }
       });
-
       localStorage.setItem('eventData', JSON.stringify(eventData));
+  }
 
+  updateDate(date, duration) {
+    
+    let _date = new Date(date);
+    if (duration.milliseconds) _date.setMilliseconds(_date.getMilliseconds() + duration.milliseconds);
+    if (duration.seconds) _date.setSeconds(_date.getSeconds() + duration.seconds);
+    if (duration.minutes) _date.setMinutes(_date.getMinutes() + duration.minutes);
+    if (duration.hours) _date.setHours(_date.getHours() + duration.hours);
+    if (duration.days) _date.setDate(_date.getDate() + duration.days);
+    if (duration.months) _date.setMonth(_date.getMonth() + duration.months);
+
+    return _date;
+  }
+
+  initModel(model) {
+    model = {
+      event: {
+        id: model.event.id, 
+        start: model.event.start, 
+        end: model.event.end, 
+        title: model.event.title 
+      }, 
+      duration: {
+        _data: model.duration._data 
+      } 
+    };
+    return model
   }
 
   clickButton(model: any) {
