@@ -63,7 +63,20 @@ export class AppComponent implements OnInit {
       _endDate = new FormControl(new Date(_startDate.value.getTime()));
     }
 
-    model = this.initModel(model);
+    model = {
+      event: {
+        id: model.event.id, 
+        start: model.event.start, 
+        startDate: _startDate, 
+        end: model.event.end, 
+        endDate: _endDate, 
+        title: model.event.title, 
+        allDay: model.event.allDay, 
+        type: model.event.type 
+      }, 
+        duration: {} 
+      }
+
     this.displayEvent = model;
     this.dialog.open(DialogDataExampleDialog, {
       data: model.event
@@ -93,7 +106,7 @@ export class AppComponent implements OnInit {
   updateEvent(model: any, type: string) {
 
       model = this.initModel(model);
-      
+
       this.displayEvent = model;
       let eventData = JSON.parse(localStorage.getItem('eventData'));
 
@@ -116,7 +129,6 @@ export class AppComponent implements OnInit {
   }
 
   updateDate(date, duration) {
-
     let _date = new Date(date);
     if (duration.milliseconds) _date.setMilliseconds(_date.getMilliseconds() + duration.milliseconds);
     if (duration.seconds) _date.setSeconds(_date.getSeconds() + duration.seconds);
