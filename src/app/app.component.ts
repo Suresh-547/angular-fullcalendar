@@ -196,7 +196,8 @@ export class DialogDataExampleDialog implements OnInit {
           id: Date.now().toString(36)+"-"+Math.random().toString(36),
           title: addEvent.title,
           start: addEvent.startDate.value.getTime(),
-          end: addEvent.endDate.value.getTime()
+          end: addEvent.endDate.value.getTime(),
+          color:  this.eventService.eventColor(addEvent.type)
         };
         window['addEvent'] =  obj;     
         eventData.push(obj)
@@ -208,10 +209,10 @@ export class DialogDataExampleDialog implements OnInit {
               endDate = this.data.endDate.value;
 
               obj.title = this.data.title; 
+              obj.color = this.eventService.eventColor(this.data.type); 
               obj.start = this.data.startDate.value.getTime(); 
               obj.end = this.data.endDate.value.getTime();
               obj.type = this.data.type;
-
               window['updatedEvent'] =  obj;     
           }
         });        

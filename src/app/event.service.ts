@@ -6,12 +6,11 @@ export class EventSesrvice {
 
     public getEvents(): Observable<any> {
         let eventData = JSON.parse(localStorage.getItem('eventData'));
-        eventData.forEach((o) => {
-            // o.start = new Date(o.start)
-            // o.end = new Date(o.end)
-            o.start = new Date(o.start)
-            o.end = new Date(o.end)            
-        })
+        eventData.forEach((o, i) => {
+            o.color = this.eventColor(o.type)
+            o.start = new Date(o.start);
+            o.end = new Date(o.end);
+        });
         return Observable.of(eventData);
     }
 
@@ -19,6 +18,12 @@ export class EventSesrvice {
         let dateObj = new Date();
         return dateObj;
     }
+
+    public eventColor(type) {
+        let color = type == 'Followup' ? '#5FA4DC' : type == 'Task' ? '#00BD9B' : type == 'Event' ? '#FCC938' : '';                     
+        return color;
+    }
+
     public saveLocalStorage(){
         var dateObj = new Date();
         let data: any = [{
