@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
     constructor(protected eventService: EventSesrvice, public dialog: MatDialog) { }
 
     ngOnInit() {   
+
       this.eventService.saveLocalStorage();
       this.eventService.getEvents().subscribe(data => {
         this.calendarOptions = {
@@ -171,7 +172,7 @@ export class AppComponent implements OnInit {
 export class DialogDataExampleDialog implements OnInit {
 
    calendarOptions;   
-   time = {};   
+   time = {};  
 
   constructor(    
     public dialogRef: MatDialogRef<DialogDataExampleDialog>,
@@ -179,6 +180,7 @@ export class DialogDataExampleDialog implements OnInit {
     protected eventService: EventSesrvice ) {}
 
     ngOnInit(){
+
     }
 
     closeDialog(): void {
@@ -196,6 +198,7 @@ export class DialogDataExampleDialog implements OnInit {
           start: addEvent.startDate.value.getTime(),
           end: addEvent.endDate.value.getTime()
         };
+        window['addEvent'] =  obj;     
         eventData.push(obj)
       }else{
         eventData.forEach((obj) => {
@@ -207,13 +210,17 @@ export class DialogDataExampleDialog implements OnInit {
               obj.title = this.data.title; 
               obj.start = this.data.startDate.value.getTime(); 
               obj.end = this.data.endDate.value.getTime();
-              obj.type = this.data.type      
+              obj.type = this.data.type;
+
+              window['updatedEvent'] =  obj;     
           }
         });        
       }
 
       localStorage.setItem('eventData', JSON.stringify(eventData));
-      window.location.reload();    
+      window['_customUpdate'] = 1;
+      let cal = new CalendarComponent(window['element'], window['zone']);
+      cal.ngAfterViewInit();         
   } 
 
   deleteEvent(id) {
@@ -221,11 +228,15 @@ export class DialogDataExampleDialog implements OnInit {
       let eventData = JSON.parse(localStorage.getItem('eventData'));
       eventData.forEach((o, i)=> {
         if (o.id == this.data.id) {
+            window['deleteObjById'] =  o.id;  
             eventData.splice(i, 1);
         }
       });
       localStorage.setItem('eventData', JSON.stringify(eventData));
-      window.location.reload();      
+      window['_customUpdate'] = 1;
+      let cal = new CalendarComponent(window['element'], window['zone']);
+      cal.ngAfterViewInit();  
+      this.closeDialog();   
     }
   }
 }
