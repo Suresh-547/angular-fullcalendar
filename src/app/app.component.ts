@@ -173,11 +173,13 @@ export class DialogDataExampleDialog implements OnInit {
 
    calendarOptions;   
    time = {};  
+   myCalendar = $('ng-fullcalendar');
 
   constructor(    
     public dialogRef: MatDialogRef<DialogDataExampleDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any, 
-    protected eventService: EventSesrvice ) {}
+    protected eventService: EventSesrvice ) {
+  }
 
     ngOnInit(){
 
@@ -198,9 +200,9 @@ export class DialogDataExampleDialog implements OnInit {
           start: addEvent.startDate.value.getTime(),
           end: addEvent.endDate.value.getTime(),
           color:  this.eventService.eventColor(addEvent.type)
-        };
-        window['addEvent'] =  obj;     
-        eventData.push(obj)
+        };    
+        eventData.push(obj);
+        this.adEvent(obj); 
       }else{
         eventData.forEach((obj) => {
           if (obj.id == this.data.id) {
@@ -213,15 +215,13 @@ export class DialogDataExampleDialog implements OnInit {
               obj.start = this.data.startDate.value.getTime(); 
               obj.end = this.data.endDate.value.getTime();
               obj.type = this.data.type;
-              window['updatedEvent'] =  obj;     
+              obj.allDay = false;    
+              this.updateEvent(obj); 
           }
         });        
       }
 
-      localStorage.setItem('eventData', JSON.stringify(eventData));
-      window['_customUpdate'] = 1;
-      let cal = new CalendarComponent(window['element'], window['zone']);
-      cal.ngAfterViewInit();         
+      localStorage.setItem('eventData', JSON.stringify(eventData));        
   } 
 
   deleteEvent(id) {
@@ -229,15 +229,26 @@ export class DialogDataExampleDialog implements OnInit {
       let eventData = JSON.parse(localStorage.getItem('eventData'));
       eventData.forEach((o, i)=> {
         if (o.id == this.data.id) {
-            window['deleteObjById'] =  o.id;  
+            this.dltEvent(o.id); 
             eventData.splice(i, 1);
         }
       });
       localStorage.setItem('eventData', JSON.stringify(eventData));
-      window['_customUpdate'] = 1;
-      let cal = new CalendarComponent(window['element'], window['zone']);
-      cal.ngAfterViewInit();  
       this.closeDialog();   
     }
   }
+
+  adEvent(e) {
+    (<any>this.myCalendar).fullCalendar( 'renderEvent', e);
+  }
+
+  dltEvent(id){
+    (<any>this.myCalendar).fullCalendar('removeEvents', id);
+  }
+
+  updateEvent(e) {
+        this.dltEvent(e.id);
+        this.adEvent(e);
+  }
+  
 }
