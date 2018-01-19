@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject,  ElementRef } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { CalendarComponent } from 'ng-fullcalendar';
@@ -15,12 +15,17 @@ import * as $ from 'jquery';
 export class AppComponent implements OnInit {
 
     data = {};
+    selectedView = "m";
     calendarOptions;
-    displayEvent: any;    
+    displayEvent: any;  
+ 
 
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
 
-    constructor(protected eventService: EventSesrvice, public dialog: MatDialog) { }
+    constructor(
+      protected eventService: EventSesrvice,
+      public dialog: MatDialog,
+      private elRef:ElementRef) { }
 
     ngOnInit() {   
 
@@ -30,58 +35,99 @@ export class AppComponent implements OnInit {
           editable: true,
           eventLimit: false,
           header: {
-            left: 'prev,next today',
+            left: '',
             center: 'title',
-            right: 'month,agendaWeek,agendaDay'
+            right: ''
           },
-          events: data
+          events: data,
+          views: {
+              month: {
+                displayEventTime: false
+              }
+          }
         };
       });
+
+      setTimeout(()=> {
+        document.querySelector('tbody').addEventListener('click', this.addEvent.bind(this));
+      }, 500)
     }
 
-    addEvent() {
+    addEvent(){
 
-      this.dialog.open(DialogDataExampleDialog, {
-        data: {
-          title: "", 
-          new: true,
-          startDate: {value: new Date()}, 
-          endDate: {value: new Date()}}
-      });
+      let isOpened = document.getElementsByClassName('mat-dialog-container');
+      if (isOpened.length == 0) {
+        let data  = {
+            title: "", 
+            new: true,
+            startDate: {value: new Date()}, 
+            endDate: {value: new Date()}        
+        }
+        this.openDialog(data);
+      }
     }
 
 
+  todayView() {
+    this.changeView(new Date());
+  }
+
+  changeView(date) {
+
+    let fullcalendar = (<any>$('ng-fullcalendar'));
+    switch (this.selectedView) {
+      case "d":
+        fullcalendar.fullCalendar('changeView', 'agendaDay', date);      
+        break;
+
+      case "w":
+        fullcalendar.fullCalendar('changeView', 'agendaWeek', date);      
+        break;  
+
+      case "m":
+        fullcalendar.fullCalendar('changeView', 'month', date);      
+        break;  
+
+      default:
+        alert("Please select view type")
+        break;
+    }
+  }
+
+  nextPre(a) {
+    let fullcalendar = (<any>$('ng-fullcalendar'));
+    switch (a) {
+      case "n":
+        fullcalendar.fullCalendar('next');
+        break;
+
+      case "p":
+        fullcalendar.fullCalendar('prev');
+        break;
+
+      default:
+        alert("Please select next or previous")
+        break;
+    }
+  }
 
   eventClick(model: any) {
-    
-    let _startDate, _endDate;
 
-    if (model.event.start) {_startDate = new FormControl(model.event.start._d)}
+      let _startDate, _endDate;
 
-    if (model.event.end) {
-      _endDate = new FormControl(model.event.end._d); 
-    }else{
-      _endDate = new FormControl(new Date(_startDate.value.getTime()));
-    }
+      if (model.event.start) {_startDate = new FormControl(model.event.start._d)}
 
-    model = {
-      event: {
-        id: model.event.id, 
-        start: model.event.start, 
-        startDate: _startDate, 
-        end: model.event.end, 
-        endDate: _endDate, 
-        title: model.event.title, 
-        allDay: model.event.allDay, 
-        type: model.event.type 
-      }, 
-        duration: {} 
+      if (model.event.end) {
+        _endDate = new FormControl(model.event.end._d); 
+      }else{
+        _endDate = new FormControl(new Date(_startDate.value.getTime()));
       }
 
-    this.displayEvent = model;
-    this.dialog.open(DialogDataExampleDialog, {
-      data: model.event
-    });    
+      model = {event: {id: model.event.id, start: model.event.start, startDate: _startDate, end: model.event.end, endDate: _endDate, title: model.event.title, allDay: model.event.allDay, type: model.event.type }, duration: {} }
+
+      this.displayEvent = model;
+      this.openDialog(model.event);
+
   }
 
 
@@ -156,6 +202,12 @@ export class AppComponent implements OnInit {
     return model
   }
 
+  openDialog(model){
+    this.dialog.open(DialogDataExampleDialog, {
+      data: model
+    });      
+  }
+  
   clickButton(model: any) {
     this.displayEvent = model;
   }

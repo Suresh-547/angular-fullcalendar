@@ -30,13 +30,15 @@ export class EventSesrvice {
             id:1,
             title: 'All Day Event',
             start: this.newDate().setDate(this.newDate().getDate()),
-            end: this.newDate().setDate(this.newDate().getDate()+1)
+            end: this.newDate().setDate(this.newDate().getDate()+1),
+            allDay: false
         },
         {
             id:2,
             title: 'Long Event',
             start: this.newDate().setDate(this.newDate().getDate()+2),
-            end: this.newDate().setDate(this.newDate().getDate()+3)
+            end: this.newDate().setDate(this.newDate().getDate()+3),
+            allDay: true
         },
         {
             id: 3,
