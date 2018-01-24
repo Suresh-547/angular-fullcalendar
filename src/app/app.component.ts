@@ -291,6 +291,9 @@ export class DialogDataExampleDialog implements OnInit {
   }
 
   adEvent(e) {
+    e.start = new Date(e.start);
+    e.end = new Date(e.end);
+    console.log(e);
     (<any>this.myCalendar).fullCalendar( 'renderEvent', e);
   }
 
