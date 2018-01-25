@@ -3,8 +3,9 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
 
 const appRoutes: Routes = [
-    { path: '', redirectTo:'calendar', pathMatch:'full' },
-    { path: 'calendar', loadChildren: './calendar/calendar.module#MyCalendarModule'},
+    { path: '', redirectTo:'my-calendar', pathMatch:'full' },
+    { path: 'my-calendar', loadChildren: './my-calendar/my-calendar.module#MyCalendarModule'},
+    { path: 'team-calendar', loadChildren: './team-calendar/team-calendar.module#TeamCalendarModule'},
 ];
 
 

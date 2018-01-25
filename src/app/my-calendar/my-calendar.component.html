@@ -1,0 +1,27 @@
+<div class="col-lg-12">
+  <div class="col-lg-1" style="margin-top: 20px;">
+    <i class="material-icons" (click)="nextPre('p')" title="Previous">keyboard_arrow_left</i> &nbsp;&nbsp;&nbsp;
+    <i class="material-icons" (click)="nextPre('n')" title="Next">keyboard_arrow_right</i>
+  </div>
+  <div class="col-lg-3">  	
+    <button mat-raised-button class=" button-bc" style="margin-top: 12px;" (click)="todayView()">Today</button>
+    &nbsp;&nbsp;&nbsp;   
+  </div> 
+  <div class="col-lg-8">
+    <mat-form-field style="width: 100px;" class="pull-right">
+      <mat-select [(ngModel)]="selectedView" (ngModelChange)="changeView('n')">
+        <mat-option value="m">Month</mat-option>
+        <mat-option value="w">Week</mat-option>
+        <mat-option value="d">Day</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div *ngIf="calendarOptions" style="padding: 15px;" id="remove">
+  <ng-fullcalendar #ucCalendar 
+  [options]="calendarOptions" (eventClick)="eventClick($event.detail)" 
+  (eventDrop)="updateEvent($event.detail)" 
+  (eventResize)="eventResize($event.detail)" >
+  </ng-fullcalendar>
+</div>
+
