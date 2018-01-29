@@ -5,7 +5,8 @@ import { CalendarComponent } from 'ng-fullcalendar';
 import { CalendarDialogComponent } from '../calendar-dialog/calendar-dialog.component';
 import { EventSesrvice } from '../event.service';
 import * as $ from 'jquery';
-import '../../assets/scheduler';
+// import '../../assets/scheduler';
+import 'fullcalendar-scheduler';
 
 @Component({
   selector: 'app-team-calendar',
