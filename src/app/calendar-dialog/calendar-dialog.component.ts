@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Inject,  ElementRef } from '@angular/core
 import {FormControl} from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { CalendarComponent } from 'ng-fullcalendar';
-import { EventSesrvice } from '../event.service';
+import { MyCalendarEvent } from '../shared/services/my-calendar.service';
 import * as $ from 'jquery';
 
 @Component({
@@ -20,7 +20,7 @@ export class CalendarDialogComponent implements OnInit {
   constructor(    
     public dialogRef: MatDialogRef<CalendarDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, 
-    protected eventService: EventSesrvice ) {
+    protected eventService: MyCalendarEvent ) {
   }
 
     ngOnInit(){

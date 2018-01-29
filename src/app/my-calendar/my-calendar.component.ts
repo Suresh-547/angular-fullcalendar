@@ -3,7 +3,7 @@ import {FormControl} from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { CalendarComponent } from 'ng-fullcalendar';
 import { CalendarDialogComponent } from '../calendar-dialog/calendar-dialog.component';
-import { EventSesrvice } from '../event.service';
+import { MyCalendarEvent } from '../shared/services/my-calendar.service';
 import * as $ from 'jquery';
 
 
@@ -23,7 +23,7 @@ export class MyCalendarComponent implements OnInit {
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
 
     constructor(
-      protected eventService: EventSesrvice,
+      protected eventService: MyCalendarEvent,
       public dialog: MatDialog,
       private elRef:ElementRef) { }
 
@@ -47,10 +47,11 @@ export class MyCalendarComponent implements OnInit {
           }
         };
       });
-
       setTimeout(()=> {
         document.querySelector('tbody').addEventListener('click', this.addEvent.bind(this));
-      }, 500)
+        (<any>$('ng-fullcalendar')).fullCalendar('option', 'height', 620);
+      }, 150)      
+
     }
 
     addEvent(){

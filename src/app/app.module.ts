@@ -7,7 +7,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EventSesrvice } from './event.service';
+import { MyCalendarEvent } from './shared/services/my-calendar.service';
+import { MyTeamCalendarEvent } from './shared/services/team-calendar.service';
 
 
 @NgModule({
@@ -22,7 +23,7 @@ import { EventSesrvice } from './event.service';
     AppRoutingModule
   ],
   entryComponents: [AppComponent],  
-  providers: [ EventSesrvice ],
+  providers: [ MyCalendarEvent, MyTeamCalendarEvent ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

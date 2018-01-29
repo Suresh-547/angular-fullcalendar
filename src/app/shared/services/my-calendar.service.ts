@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 @Injectable()
-export class EventSesrvice {
+export class MyCalendarEvent {
 
     public getEvents(): Observable<any> {
         let eventData = JSON.parse(localStorage.getItem('eventData'));
