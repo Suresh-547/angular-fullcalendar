@@ -7,64 +7,116 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class MyTeamCalendarEvent {
 
-    public getTeamEvents(): Observable < any > {
-        let eventData = JSON.parse(localStorage.getItem('teamEventData'));
-        return eventData;
+    public getTeamEvents() {
+        let data = JSON.parse(localStorage.getItem('teamEventData'));
+        data.forEach((o) => {
+            if (typeof o.start == 'number') {
+                o.start = new Date(o.start)
+            }
+
+            if (typeof o.end == 'number') {
+                o.end = new Date(o.end)
+            }
+        });
+
+        console.log(data);
+        return data;
     }
 
-    public getTeamResourceData(): Observable < any > {
-        let eventData = JSON.parse(localStorage.getItem('teamResourceData'));
-        return eventData;
+    public getTeamResourceData() {
+        let data = JSON.parse(localStorage.getItem('teamResourceData'));
+        return data;
+    }
+
+    public getHeader() {
+        let data = {
+                left: '',
+                center: 'title',
+                right: ''
+              };
+        return data;
+    }
+
+    public getViews() {
+        let data = {
+        timelineThreeDays: {
+          type: 'timeline',
+          duration: { days: 3 }
+        },
+        month: {
+            // eventLimit: 3
+        }
+      };
+
+      return data;
+    }
+
+    public newDate () {
+        let dateObj = new Date();
+        dateObj.setMinutes(dateObj.getMinutes()+ 330);
+        return dateObj;
     }
 
     public saveLocalStorage() {
 
-        var dateObj = new Date();
-        let teamEventData: any = [{
+        if (!localStorage.getItem('teamEventData')) {
+            localStorage.setItem('teamEventData', JSON.stringify(this.eventData()));
+        }
+
+        if (!localStorage.getItem('teamResourceData')) {
+            localStorage.setItem('teamResourceData', JSON.stringify(this.resourceData()));
+        }
+    }
+
+    public eventData () {
+        let data: any = [{
                 id: '1',
                 resourceId: 'b',
-                start: '2017-12-07T02:00:00',
-                end: '2017-12-07T07:00:00',
+                start: new Date(this.newDate().setMinutes(this.newDate().getMinutes())),
+                end: new Date(this.newDate().setMinutes(this.newDate().getMinutes()+700)),
                 title: 'event 1'
             },
             {
                 id: '2',
                 resourceId: 'c',
-                start: '2017-12-07T05:00:00',
-                end: '2017-12-07T22:00:00',
+                start: new Date(this.newDate().setMinutes(this.newDate().getMinutes()+120)),
+                end: new Date(this.newDate().setMinutes(this.newDate().getMinutes()+600)),
                 title: 'event 2'
             },
             {
                 id: '3',
                 resourceId: 'd',
-                start: '2017-12-06',
-                end: '2017-12-08',
+                start: new Date(this.newDate().setMinutes(this.newDate().getMinutes()+10)),
+                end: new Date(this.newDate().setMinutes(this.newDate().getMinutes()+500)),
                 title: 'event 3'
             },
             {
                 id: '4',
                 resourceId: 'e',
-                start: '2017-12-07T03:00:00',
-                end: '2017-12-07T08:00:00',
+                start: new Date(this.newDate().setMinutes(this.newDate().getMinutes()+10)),
+                end: new Date(this.newDate().setMinutes(this.newDate().getMinutes()+200)),
                 title: 'event 4'
             },
             {
                 id: '5',
                 resourceId: 'f',
-                start: '2017-12-07T00:30:00',
-                end: '2017-12-07T02:30:00',
+                start: this.newDate(),
+                end: new Date(this.newDate().setMinutes(this.newDate().getMinutes()+120)),
                 title: 'event 5'
             },
             {
                 id: '6',
                 resourceId: 'a',
-                start: '2017-12-07T00:30:00',
-                end: '2017-12-07T02:30:00',
-                title: 'event 00'
+                start: this.newDate(),
+                end: new Date(this.newDate().setMinutes(this.newDate().getMinutes()+90)),
+                title: 'Today Event'
             }
         ];
+        return data;
+    }
 
-        let teamResourceData: any = [{
+    private resourceData () {
+        let data: any = [{
                 id: 'a',
                 title: 'Jitendra Rajput'
             },
@@ -91,18 +143,19 @@ export class MyTeamCalendarEvent {
                 id: 'f',
                 title: 'Sunil Kharbash',
                 eventColor: 'red'
-            }
+            },
+            {
+                id: 'G',
+                title: 'Monis',
+                eventColor: 'red'
+            },
+            {
+                id: 'h',
+                title: 'Renil',
+                eventColor: 'red'
+            }                        
         ];
 
-        let eventData = localStorage.getItem('teamEventData');
-        let resourcesData = localStorage.getItem('teamResourceData');
-
-        if (!eventData) {
-            localStorage.setItem('teamEventData', JSON.stringify(teamEventData));
-        }
-
-        if (!resourcesData) {
-            localStorage.setItem('teamResourceData', JSON.stringify(teamResourceData));
-        }
+        return data;
     }
 };

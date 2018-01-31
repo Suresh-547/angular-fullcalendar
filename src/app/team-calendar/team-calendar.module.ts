@@ -8,7 +8,7 @@ import { CalendarModule } from 'primeng/primeng';
 import { FullCalendarModule } from 'ng-fullcalendar';
 import { TeamCalendarRoutingModule } from './team-calendar-routing.module';
 import { TeamCalendarComponent } from './team-calendar.component';
-import { CalendarDialogComponent } from '../calendar-dialog/calendar-dialog.component';
+import { TeamCalendarDialogComponent } from '../team-calendar-dialog/team-calendar-dialog.component';
 
 
 
@@ -30,10 +30,10 @@ import { CalendarDialogComponent } from '../calendar-dialog/calendar-dialog.comp
     ],
     declarations: [
         TeamCalendarComponent, 
-        CalendarDialogComponent
+        TeamCalendarDialogComponent
     ],
     entryComponents: [
-        CalendarDialogComponent
+        TeamCalendarDialogComponent
     ]
 })
 export class TeamCalendarModule {

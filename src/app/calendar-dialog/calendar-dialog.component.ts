@@ -10,6 +10,7 @@ import * as $ from 'jquery';
   templateUrl: './calendar-dialog.component.html',
   styleUrls: ['./calendar-dialog.component.css']
 })
+
 export class CalendarDialogComponent implements OnInit {
 
    edit: boolean;
@@ -44,7 +45,7 @@ export class CalendarDialogComponent implements OnInit {
           color:  this.eventService.eventColor(addEvent.type)
         };    
         eventData.push(obj);
-        this.adEvent(obj); 
+        this.adMyEvent(obj); 
       }else{
         eventData.forEach((obj) => {
           if (obj.id == this.data.id) {
@@ -80,11 +81,14 @@ export class CalendarDialogComponent implements OnInit {
     }
   }
 
-  adEvent(e) {
+  addEvent (e) {
+    (<any>this.myCalendar).fullCalendar( 'renderEvent', e);
+  }
+
+  adMyEvent(e) {
     e.start = new Date(e.start);
     e.end = new Date(e.end);
-    console.log(e);
-    (<any>this.myCalendar).fullCalendar( 'renderEvent', e);
+    this.addEvent(e);
   }
 
   dltEvent(id){
@@ -93,7 +97,6 @@ export class CalendarDialogComponent implements OnInit {
 
   updateEvent(e) {
         this.dltEvent(e.id);
-        this.adEvent(e);
+        this.adMyEvent(e);
   }
-
 }
