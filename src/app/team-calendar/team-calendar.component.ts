@@ -17,6 +17,7 @@ export class TeamCalendarComponent implements OnInit {
    public selectedView = 'td';
    dialogRef: MatDialogRef<any>;
    private openedDialog;
+   private horizontal: boolean = false;
 
   constructor(
     protected teamEventService: MyTeamCalendarEvent, 
@@ -36,7 +37,8 @@ export class TeamCalendarComponent implements OnInit {
       // eventLimit: true,
       scrollTime: '00:00',
       header: this.teamEventService.getHeader(),
-      defaultView: 'agendaDay',
+      // defaultView: 'agendaDay',
+      defaultView: 'timelineDay',
       views: this.teamEventService.getViews(),
       resources: this.teamEventService.getTeamResourceData(),
       events: this.teamEventService.getTeamEvents(),
@@ -48,26 +50,14 @@ export class TeamCalendarComponent implements OnInit {
       },
       eventClick: function(calEvent, jsEvent, view) {
           _this.editEvent(calEvent);
-      }     
-    }); 
-    // calendar.fullCalendar({
-    //   defaultView: 'agendaDay',
-    //   // defaultDate: '2017-03-07',
-    //   editable: true,
-    //   // selectable: true,
-    //   // eventLimit: true, // allow "more" link when too many events
-    //   header: this.teamEventService.getHeader(),
-    //   views: this.teamEventService.getViews(),
-    //   // {
-    //   //   agendaTwoDay: {
-    //   //     type: 'agenda',
-    //   //     duration: { days: 3 },
-    //   //     groupByResource: true
-    //   //   }
-    //   // },
-    //   resources: this.teamEventService.getTeamResourceData(),
-    //   events: this.teamEventService.getTeamEvents(),      
-    // });    
+      },
+      eventResize: function(event, delta, revertFunc) {
+          _this.resizeEvent(event)
+      },
+      eventDrop: function(event, delta, revertFunc) {
+          _this.eventDrop(event);
+      }                 
+    });   
 
    setTimeout(() => {
        calendar.fullCalendar('option', 'height', 600);
@@ -91,11 +81,20 @@ export class TeamCalendarComponent implements OnInit {
 
     switch (this.selectedView) {
       case "td":
-        fullcalendar.fullCalendar('changeView', 'timelineDay', date);      
+
+        if (this.horizontal) {
+            fullcalendar.fullCalendar('changeView', 'agendaDay', date);      
+        }else{
+            fullcalendar.fullCalendar('changeView', 'timelineDay', date);      
+        }
         break;
 
       case "tltd":
-        fullcalendar.fullCalendar('changeView', 'timelineThreeDays', date);      
+        if (this.horizontal) {
+            fullcalendar.fullCalendar('changeView', 'timelineThreeDays', date);      
+        }else{
+            fullcalendar.fullCalendar('changeView', 'timelineThreeDaysH', date);      
+        }      
         break;  
 
       case "aw":
@@ -104,7 +103,7 @@ export class TeamCalendarComponent implements OnInit {
 
       case "m":
         fullcalendar.fullCalendar('changeView', 'month', date);      
-        break;  
+        break;   
 
       default:
         alert("Please select view type");
@@ -166,5 +165,38 @@ export class TeamCalendarComponent implements OnInit {
     };
     this.openDialog(obj);
   }
-  
+
+  resizeEvent(e) {
+     let teamEventData = JSON.parse(localStorage.getItem('teamEventData'));
+     teamEventData.forEach((o) => {
+       if (o.id == e.id) {
+         o.end = Date.parse(e.end.format())
+       }
+     });
+     localStorage.setItem('teamEventData', JSON.stringify(teamEventData));
+  }
+
+  eventDrop(e) {
+     let teamEventData = JSON.parse(localStorage.getItem('teamEventData'));
+     teamEventData.forEach((o) => {
+       if (o.id == e.id) {
+         o.resourceId = e.resourceId;
+         o.start = Date.parse(e.start.format());
+         o.end = Date.parse(e.end.format());
+       }
+     });
+     localStorage.setItem('teamEventData', JSON.stringify(teamEventData));
+  }
+
+  verticleResource () {
+    this.horizontal = false;
+    this.changeView('');
+  }
+
+  horizontalResource() {
+    this.horizontal = true;
+    this.changeView('');
+  }
+
+
  }

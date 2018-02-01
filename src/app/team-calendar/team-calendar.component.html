@@ -5,6 +5,11 @@
   </div>
   <div class="col-lg-3">    
     <button mat-raised-button class=" button-bc" style="margin-top: 12px;" (click)="todayView()">Today</button>
+    &nbsp;&nbsp;&nbsp; 
+    <span *ngIf = "selectedView == 'td' || selectedView == 'tltd'"  style="margin-top: 20px;">      
+      <i class="material-icons" (click) = "verticleResource();" >view_list</i>
+      <i class="material-icons rotate-90-dg"  (click) = "horizontalResource();" >view_list</i>
+    </span>
   </div> 
   <div class="col-lg-8">
     <mat-form-field style="width: 100px;" class="pull-right">
