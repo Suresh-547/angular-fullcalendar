@@ -33,22 +33,42 @@ export class TeamCalendarComponent implements OnInit {
 
     calendar.fullCalendar({
       editable: true,
-      eventLimit: true,
+      // eventLimit: true,
       scrollTime: '00:00',
       header: this.teamEventService.getHeader(),
-      defaultView: 'timelineDay',
+      defaultView: 'agendaDay',
       views: this.teamEventService.getViews(),
       resources: this.teamEventService.getTeamResourceData(),
       events: this.teamEventService.getTeamEvents(),
+      resourceAreaWidth: "15%",
+      groupByResource: false,
       resourceRender: function(resource, cellEls) {
         cellEls.on('click', function() {
-          _this.deleteResource(resource);
+          // _this.deleteResource(resource);
         });
       },
       eventClick: function(calEvent, jsEvent, view) {
           _this.editEvent(calEvent);
       }     
     }); 
+    // calendar.fullCalendar({
+    //   defaultView: 'agendaDay',
+    //   // defaultDate: '2017-03-07',
+    //   editable: true,
+    //   // selectable: true,
+    //   // eventLimit: true, // allow "more" link when too many events
+    //   header: this.teamEventService.getHeader(),
+    //   views: this.teamEventService.getViews(),
+    //   // {
+    //   //   agendaTwoDay: {
+    //   //     type: 'agenda',
+    //   //     duration: { days: 3 },
+    //   //     groupByResource: true
+    //   //   }
+    //   // },
+    //   resources: this.teamEventService.getTeamResourceData(),
+    //   events: this.teamEventService.getTeamEvents(),      
+    // });    
 
    setTimeout(() => {
        calendar.fullCalendar('option', 'height', 600);
@@ -116,27 +136,23 @@ export class TeamCalendarComponent implements OnInit {
   }
 
   addEvent(model) {
-    // setTimeout(() => {
-
-      console.log(this.openedDialog)
-      // console.log(this.dialogRef.getDialogById('mat-dialog-container'))
-    // }, 1000);
-    // let isOpened = document.getElementsByClassName('mat-dialog-container');
-    // if (isOpened.length == 0) {
-      // code...
-        let obj = {
-          data: {
-            new: true,
-            title: "",
-            type: '',
-            start: new Date(),
-            end: new Date(),
-            resources: this.teamEventService.getTeamResourceData(),
-            resourceId:""
-          }
-        };
-        this.openDialog(obj);     
-    // }
+    var obj = {
+      data: {
+        new: true,
+        title: "",
+        type: '',
+        start: new Date(),
+        end: new Date(),
+        resources: this.teamEventService.getTeamResourceData(),
+        resourceId:""
+      }
+    };
+    setTimeout(() => {
+        let isOpened = document.getElementsByClassName('mat-dialog-container');
+        if (isOpened.length == 0) {
+            this.openDialog(obj,);     
+        }
+    }, 50);
   } 
 
   editEvent(calEvent) {

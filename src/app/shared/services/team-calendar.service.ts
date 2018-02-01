@@ -19,7 +19,6 @@ export class MyTeamCalendarEvent {
             }
         });
 
-        console.log(data);
         return data;
     }
 
@@ -40,11 +39,12 @@ export class MyTeamCalendarEvent {
     public getViews() {
         let data = {
         timelineThreeDays: {
-          type: 'timeline',
-          duration: { days: 3 }
+          type: 'agenda',
+          duration: { days: 3 },
+          groupByResource: true
         },
         month: {
-            // eventLimit: 3
+            // eventLimit: 10
         }
       };
 
