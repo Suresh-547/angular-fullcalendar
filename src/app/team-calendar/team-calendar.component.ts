@@ -44,7 +44,6 @@ export class TeamCalendarComponent implements OnInit {
       groupByResource: false,
       resourceRender: function(resource, cellEls) {
         cellEls.on('click', function() {
-          // _this.deleteResource(resource);
         });
       },
       eventClick: function(calEvent, jsEvent, view) {
@@ -167,17 +166,5 @@ export class TeamCalendarComponent implements OnInit {
     };
     this.openDialog(obj);
   }
-
-  addResource () {
-
-  }
-
-  deleteResource(resource) {
-        if (confirm('Are you sure you want to delete ' + resource.title + '?')) {
-         (<any>$('#calendar')).fullCalendar('removeResource', resource);
-        }
-  }
-
-
-
+  
  }
