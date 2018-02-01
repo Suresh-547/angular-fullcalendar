@@ -34,6 +34,7 @@ export class MyCalendarComponent implements OnInit {
         this.calendarOptions = {
           editable: true,
           eventLimit: false,
+          schedulerLicenseKey: "7894561586-fcs-7412589635",
           header: {
             left: '',
             center: 'title',

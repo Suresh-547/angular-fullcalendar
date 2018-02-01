@@ -10,7 +10,6 @@ export class MyTeamCalendarEvent {
     public getTeamEvents() {
         let data = JSON.parse(localStorage.getItem('teamEventData'));
         data.forEach((o) => {
-             console.log(o);
             if (typeof o.start == 'number') {
                 o.start = new Date(o.start)
             }
@@ -162,11 +161,7 @@ export class MyTeamCalendarEvent {
             {
                 id: 'j',
                 title: 'Shubhan Singh'
-            },
-            {
-                id: 'M',
-                title: 'Akshay kumar'
-            }                                                                                    
+            }                                                                                   
         ];
 
         return data;

@@ -34,20 +34,15 @@ export class TeamCalendarComponent implements OnInit {
 
     calendar.fullCalendar({
       editable: true,
-      // eventLimit: true,
       scrollTime: '00:00',
+      schedulerLicenseKey: "7894561586-fcs-7412589635",
       header: this.teamEventService.getHeader(),
-      // defaultView: 'agendaDay',
       defaultView: 'timelineDay',
       views: this.teamEventService.getViews(),
       resources: this.teamEventService.getTeamResourceData(),
       events: this.teamEventService.getTeamEvents(),
       resourceAreaWidth: "15%",
       groupByResource: false,
-      resourceRender: function(resource, cellEls) {
-        cellEls.on('click', function() {
-        });
-      },
       eventClick: function(calEvent, jsEvent, view) {
           _this.editEvent(calEvent);
       },
@@ -134,20 +129,20 @@ export class TeamCalendarComponent implements OnInit {
   }
 
   addEvent(model) {
-    var obj = {
-      data: {
-        new: true,
-        title: "",
-        type: '',
-        start: new Date(),
-        end: new Date(),
-        resources: this.teamEventService.getTeamResourceData(),
-        resourceId:""
-      }
-    };
     setTimeout(() => {
         let isOpened = document.getElementsByClassName('mat-dialog-container');
         if (isOpened.length == 0) {
+            var obj = {
+              data: {
+                new: true,
+                title: "",
+                type: '',
+                start: new Date(),
+                end: new Date(),
+                resources: this.teamEventService.getTeamResourceData(),
+                resourceId:""
+              }
+            };
             this.openDialog(obj,);     
         }
     }, 50);
@@ -167,17 +162,17 @@ export class TeamCalendarComponent implements OnInit {
   }
 
   resizeEvent(e) {
-     let teamEventData = JSON.parse(localStorage.getItem('teamEventData'));
+     let teamEventData = this.getTeamEventData();
      teamEventData.forEach((o) => {
        if (o.id == e.id) {
          o.end = Date.parse(e.end.format())
        }
      });
-     localStorage.setItem('teamEventData', JSON.stringify(teamEventData));
+     this.setTeamEventData(teamEventData);
   }
 
   eventDrop(e) {
-     let teamEventData = JSON.parse(localStorage.getItem('teamEventData'));
+     let teamEventData = this.getTeamEventData();
      teamEventData.forEach((o) => {
        if (o.id == e.id) {
          o.resourceId = e.resourceId;
@@ -185,13 +180,23 @@ export class TeamCalendarComponent implements OnInit {
          o.end = Date.parse(e.end.format());
        }
      });
-     localStorage.setItem('teamEventData', JSON.stringify(teamEventData));
+     this.setTeamEventData(teamEventData);
+  }
+
+  getTeamEventData() {
+    let data = JSON.parse(localStorage.getItem('teamEventData'));
+    return data;
+  }
+
+  setTeamEventData(data) {
+    localStorage.setItem('teamEventData', JSON.stringify(data));
   }
 
   verticleResource () {
     this.horizontal = false;
     this.changeView('');
   }
+
 
   horizontalResource() {
     this.horizontal = true;
