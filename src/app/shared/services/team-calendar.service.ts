@@ -30,7 +30,7 @@ export class MyTeamCalendarEvent {
     public getHeader() {
         let data = {
                 left: '',
-                center: 'title',
+                center: '',
                 right: ''
               };
         return data;
@@ -103,10 +103,10 @@ export class MyTeamCalendarEvent {
             },
             {
                 id: '5',
-                resourceId: 'f',
-                start: this.newDate().getTime(),
-                end: this.newDate().setMinutes(this.newDate().getMinutes()+120)).toISOString(,
-                title: 'event 5'
+                resourceId: 'e',
+                start: this.newDate().setMinutes(this.newDate().getMinutes()+10),
+                end: this.newDate().setMinutes(this.newDate().getMinutes()+200),
+                title: 'event 4'
             },
             {
                 id: '6',

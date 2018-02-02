@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http';
 import { MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatDialogModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 import { CalendarModule } from 'primeng/primeng';
-import { FullCalendarModule } from 'ng-fullcalendar';
 import { TeamCalendarRoutingModule } from './team-calendar-routing.module';
 import { TeamCalendarComponent } from './team-calendar.component';
 import { TeamCalendarDialogComponent } from '../team-calendar-dialog/team-calendar-dialog.component';
@@ -25,8 +24,7 @@ import { TeamCalendarDialogComponent } from '../team-calendar-dialog/team-calend
         MatDialogModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        CalendarModule,
-        FullCalendarModule        
+        CalendarModule        
     ],
     declarations: [
         TeamCalendarComponent, 

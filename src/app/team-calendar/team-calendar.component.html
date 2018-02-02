@@ -11,7 +11,14 @@
       <i class="material-icons rotate-90-dg"  (click) = "horizontalResource();" >view_list</i>
     </span>
   </div> 
-  <div class="col-lg-8">
+
+  
+  <div class="col-lg-5">    
+    <h1>    
+    {{calendarTitle}}
+    </h1>
+  </div>
+  <div class="col-lg-3">
     <mat-form-field style="width: 100px;" class="pull-right">
       <mat-select [(ngModel)]="selectedView" (ngModelChange)="changeView()">
         <mat-option value="td">Day</mat-option>

@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, Inject,  ElementRef } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import { CalendarComponent } from 'ng-fullcalendar';
 import { TeamCalendarDialogComponent } from '../team-calendar-dialog/team-calendar-dialog.component';
 import { MyTeamCalendarEvent } from '../shared/services/team-calendar.service';
 import * as $ from 'jquery';
-
+import 'fullcalendar-scheduler'
 
 @Component({
   selector: 'app-team-calendar',
@@ -18,6 +17,7 @@ export class TeamCalendarComponent implements OnInit {
    dialogRef: MatDialogRef<any>;
    private openedDialog;
    private horizontal: boolean = false;
+   public calendarTitle;
 
   constructor(
     protected teamEventService: MyTeamCalendarEvent, 
@@ -43,6 +43,10 @@ export class TeamCalendarComponent implements OnInit {
       events: this.teamEventService.getTeamEvents(),
       resourceAreaWidth: "15%",
       groupByResource: false,
+      viewRender: function(view) {
+        var title = view.title;
+            _this.calendarTitle = view.title;
+      },      
       eventClick: function(calEvent, jsEvent, view) {
           _this.editEvent(calEvent);
       },

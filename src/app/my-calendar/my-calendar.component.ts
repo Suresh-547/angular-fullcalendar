@@ -17,7 +17,8 @@ export class MyCalendarComponent implements OnInit {
     data = {};
     selectedView = "m";
     calendarOptions;
-    displayEvent: any;  
+    displayEvent: any; 
+       public calendarTitle; 
  
 
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
@@ -37,7 +38,7 @@ export class MyCalendarComponent implements OnInit {
           schedulerLicenseKey: "7894561586-fcs-7412589635",
           header: {
             left: '',
-            center: 'title',
+            center: '',
             right: ''
           },
           events: data,
@@ -45,12 +46,13 @@ export class MyCalendarComponent implements OnInit {
               month: {
                 displayEventTime: false
               }
-          }
+          }         
         };
       });
       setTimeout(()=> {
         document.querySelector('tbody').addEventListener('click', this.addEvent.bind(this));
         (<any>$('ng-fullcalendar')).fullCalendar('option', 'height', 620);
+        this.getView();
       }, 150)      
 
     }
@@ -69,6 +71,10 @@ export class MyCalendarComponent implements OnInit {
       }
     }
 
+  getView() {
+        let getView = (<any>$('ng-fullcalendar')).fullCalendar( 'getView' );
+        this.calendarTitle = getView.title.replace(/undefined/g, '');
+  }
 
   todayView() {
     this.changeView(new Date());
@@ -94,6 +100,9 @@ export class MyCalendarComponent implements OnInit {
         alert("Please select view type")
         break;
     }
+    setTimeout(() => {
+      this.getView();
+    }, 150);
   }
 
   nextPre(a) {
