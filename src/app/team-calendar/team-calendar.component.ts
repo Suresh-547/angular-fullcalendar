@@ -38,37 +38,35 @@ export class TeamCalendarComponent implements OnInit {
       schedulerLicenseKey: "7894561586-fcs-7412589635",
       header: this.teamEventService.getHeader(),
       defaultView: 'timelineDay',
+      height: 640,
       views: this.teamEventService.getViews(),
       resources: this.teamEventService.getTeamResourceData(),
       events: this.teamEventService.getTeamEvents(),
       resourceAreaWidth: "15%",
       groupByResource: false,
+      resourceRender: function(resource, cellEls) {
+        cellEls.on('click', function() {
+          alert(resource.title);
+        });
+      },
       viewRender: function(view) {
-        var title = view.title;
-            _this.calendarTitle = view.title;
+        _this.calendarTitle = view.title;
       },      
       eventClick: function(calEvent, jsEvent, view) {
           _this.editEvent(calEvent);
       },
       eventResize: function(event, delta, revertFunc) {
-          _this.resizeEvent(event)
+          _this.resizeEvent(event);
       },
       eventDrop: function(event, delta, revertFunc) {
           _this.eventDrop(event);
+      },
+      dayClick: function(date, jsEvent, view) {
+          _this.addEvent(date);
       }                 
     });   
-
-   setTimeout(() => {
-       calendar.fullCalendar('option', 'height', 600);
-       _this.addEventListener();
-   }, 10);
  
   }    
-
-  addEventListener () {
-        let classname = document.getElementsByClassName('fc-scroller');
-            classname[classname.length-1].addEventListener('click', this.addEvent.bind(this));
-  }
 
   todayView () {
     this.changeView(new Date());
@@ -97,18 +95,17 @@ export class TeamCalendarComponent implements OnInit {
         break;  
 
       case "aw":
-        fullcalendar.fullCalendar('changeView', 'agendaWeek', date);      
+          fullcalendar.fullCalendar('changeView', 'timelineWeek', date);           
         break;        
 
       case "m":
-        fullcalendar.fullCalendar('changeView', 'month', date);      
-        break;   
+        fullcalendar.fullCalendar('changeView', 'timelineMonth', date);              
+      break;     
 
       default:
         alert("Please select view type");
         break;
     }
-    this.addEventListener();
   }
 
   nextPre (a) {
@@ -132,7 +129,7 @@ export class TeamCalendarComponent implements OnInit {
     this.openedDialog =  this.dialog.open(TeamCalendarDialogComponent, o);
   }
 
-  addEvent(model) {
+  addEvent(date) {
     setTimeout(() => {
         let isOpened = document.getElementsByClassName('mat-dialog-container');
         if (isOpened.length == 0) {
@@ -141,8 +138,8 @@ export class TeamCalendarComponent implements OnInit {
                 new: true,
                 title: "",
                 type: '',
-                start: new Date(),
-                end: new Date(),
+                start: new Date(date.format()),
+                end: '',
                 resources: this.teamEventService.getTeamResourceData(),
                 resourceId:""
               }
@@ -156,7 +153,7 @@ export class TeamCalendarComponent implements OnInit {
     calEvent.edit = true;
     calEvent.new = false;
     calEvent.start = new Date(calEvent.start);
-    calEvent.end = new Date(calEvent.end);
+    calEvent.end = calEvent.allDay ? '' : new Date(calEvent.end);
     calEvent.resources = this.teamEventService.getTeamResourceData();
 
     let obj = {
@@ -206,6 +203,5 @@ export class TeamCalendarComponent implements OnInit {
     this.horizontal = true;
     this.changeView('');
   }
-
 
  }

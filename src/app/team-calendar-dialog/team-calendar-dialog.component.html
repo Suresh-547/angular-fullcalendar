@@ -32,7 +32,13 @@
         </mat-select>
       </mat-form-field>      
       </div>
-    </div>      
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">     
+        <mat-checkbox color = "primary" [(ngModel)]="data.allDay" name = "fDay" (click) = "checkAllDay();">All Day</mat-checkbox>
+      </div>
+    </div>          
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="sdate">Start Time:</label>
@@ -42,7 +48,7 @@
       <div class="form-group col-md-6">
         <label for="edate">End Time:</label>
         <br>
-        <p-calendar name="endDate" [(ngModel)]="data.end" dateFormat="dd.mm.yy" [showTime]="true" [showIcon]="true" hourFormat="12" readonlyInput="true"></p-calendar>
+        <p-calendar name="endDate" [disabled] = 'data.allDay' [(ngModel)]="data.end" dateFormat="dd.mm.yy" [showTime]="true" [showIcon]="true" hourFormat="12" readonlyInput="true"></p-calendar>
       </div>
     </div>
     <button mat-button mat-dialog-close style="">Cancel</button>
@@ -59,7 +65,7 @@
       </div>
       <div class="col-md-11" style="padding-left: 0;">
         <p>
-          {{data.start | date: 'dd MMM yyyy, hh:mm a'}} - {{data.end | date: 'dd MMM yyyy, hh:mm a'}}
+          {{data.start | date: 'dd MMM yyyy, hh:mm a'}} - {{data.allDay ? '' : data.end | date: 'dd MMM yyyy, hh:mm a'}}
         </p>
       </div>
     </div>
@@ -71,5 +77,13 @@
          <p>{{data.type}}</p>
       </div>
     </div>
+    <div class="row"  style="margin-top: 20px;" *ngIf = "data.allDay">
+      <div class="col-md-1">
+       <i class="material-icons" style="color: green">check_box</i>
+      </div>
+      <div class="col-md-11" style="padding-left: 0;">
+         <p>All Day</p>
+      </div>      
+    </div>    
   </div>
 </div>

@@ -49,7 +49,8 @@ export class MyTeamCalendarEvent {
           groupByResource: true
         },
           month: {
-            displayEventTime: false
+            displayEventTime: false,
+            // groupByResource: true
           }                
       };
       return data;

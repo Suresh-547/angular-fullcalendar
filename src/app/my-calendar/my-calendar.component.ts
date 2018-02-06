@@ -1,226 +1,194 @@
-import { Component, OnInit, ViewChild, Inject,  ElementRef } from '@angular/core';
-import {FormControl} from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import { CalendarComponent } from 'ng-fullcalendar';
+import { Component, OnInit, ViewChild, Inject, ElementRef } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { CalendarDialogComponent } from '../calendar-dialog/calendar-dialog.component';
 import { MyCalendarEvent } from '../shared/services/my-calendar.service';
+import { MyTeamCalendarEvent } from '../shared/services/team-calendar.service';
 import * as $ from 'jquery';
-
+import 'fullcalendar-scheduler'
 
 @Component({
-  selector: 'app-my-calendar',
-  templateUrl: './my-calendar.component.html',
-  styleUrls: ['./my-calendar.component.css']
+    selector: 'app-my-calendar',
+    templateUrl: './my-calendar.component.html',
+    styleUrls: ['./my-calendar.component.css']
 })
 export class MyCalendarComponent implements OnInit {
 
     data = {};
     selectedView = "m";
     calendarOptions;
-    displayEvent: any; 
-       public calendarTitle; 
- 
-
-    @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
+    displayEvent: any;
+    public calendarTitle: string;
+    // private pickStartDate: Date;
 
     constructor(
-      protected eventService: MyCalendarEvent,
-      public dialog: MatDialog,
-      private elRef:ElementRef) { }
+        protected eventService: MyCalendarEvent,
+        protected teamEventService: MyTeamCalendarEvent,
+        public dialog: MatDialog,
+        private elRef: ElementRef) {}
 
-    ngOnInit() {   
+    ngOnInit() {
 
-      this.eventService.saveLocalStorage();
-      this.eventService.getEvents().subscribe(data => {
-        this.calendarOptions = {
-          editable: true,
-          eventLimit: false,
-          schedulerLicenseKey: "7894561586-fcs-7412589635",
-          header: {
-            left: '',
-            center: '',
-            right: ''
-          },
-          events: data,
-          views: {
-              month: {
-                displayEventTime: false
-              }
-          }         
-        };
-      });
-      setTimeout(()=> {
-        document.querySelector('tbody').addEventListener('click', this.addEvent.bind(this));
-        (<any>$('ng-fullcalendar')).fullCalendar('option', 'height', 620);
-        this.getView();
-      }, 150)      
 
+        const _ths = this;
+
+        const calendar = ( < any > $('#calendar'));
+
+        this.eventService.saveLocalStorage();
+
+        calendar.fullCalendar({
+            editable: true,
+            schedulerLicenseKey: "7894561586-fcs-7412589635",
+            header: this.eventService.getHeader(),
+            height: 640,
+            views: this.eventService.getViews(),
+            events: this.eventService.getEvents(),
+            viewRender: function(view) {
+                _ths.calendarTitle = view.title.replace(/undefined/g, '');
+            },
+            eventClick: function(calEvent, jsEvent, view) {
+                _ths.eventClick(calEvent);
+            },
+            eventResize: function(event, delta, revertFunc) {
+                _ths.eventResize(event, '')
+            },
+            eventDrop: function(event, delta, revertFunc) {
+                _ths.eventDrop(event);
+            },
+            dayClick: function(date, jsEvent, view) {
+                _ths.addEvent(date);
+            }            
+        });
     }
 
-    addEvent(){
-
-      let isOpened = document.getElementsByClassName('mat-dialog-container');
-      if (isOpened.length == 0) {
-        let data  = {
-            title: "", 
-            new: true,
-            startDate: {value: new Date()}, 
-            endDate: {value: new Date()}        
+    addEvent(date) {
+        let isOpened = document.getElementsByClassName('mat-dialog-container');
+        if (isOpened.length == 0) {
+            let data = {
+                title: "",
+                new: true,
+                startDate: new Date(date.format()),
+                endDate: "",
+                allDay: true
+            }
+            this.openDialog(data);
         }
-        this.openDialog(data);
-      }
     }
 
-  getView() {
-        let getView = (<any>$('ng-fullcalendar')).fullCalendar( 'getView' );
-        this.calendarTitle = getView.title.replace(/undefined/g, '');
-  }
-
-  todayView() {
-    this.changeView(new Date());
-  }
-
-  changeView(date) {
-
-    let fullcalendar = (<any>$('ng-fullcalendar'));
-    switch (this.selectedView) {
-      case "d":
-        fullcalendar.fullCalendar('changeView', 'agendaDay', date);      
-        break;
-
-      case "w":
-        fullcalendar.fullCalendar('changeView', 'agendaWeek', date);      
-        break;  
-
-      case "m":
-        fullcalendar.fullCalendar('changeView', 'month', date);      
-        break;  
-
-      default:
-        alert("Please select view type")
-        break;
+    todayView() {
+        this.changeView(new Date());
     }
-    setTimeout(() => {
-      this.getView();
-    }, 150);
-  }
 
-  nextPre(a) {
-    let fullcalendar = (<any>$('ng-fullcalendar'));
-    switch (a) {
-      case "n":
-        fullcalendar.fullCalendar('next');
-        break;
+    changeView(date) {
 
-      case "p":
-        fullcalendar.fullCalendar('prev');
-        break;
+        let fullcalendar = ( < any > $('#calendar'));
+        switch (this.selectedView) {
+            case "d":
+                fullcalendar.fullCalendar('changeView', 'agendaDay', date);
+                break;
 
-      default:
-        alert("Please select next or previous")
-        break;
+            case "w":
+                fullcalendar.fullCalendar('changeView', 'agendaWeek', date);
+                break;
+
+            case "m":
+                fullcalendar.fullCalendar('changeView', 'month', date);
+                break;
+
+            default:
+                alert("Please select view type")
+                break;
+        }
     }
-  }
 
-  eventClick(model: any) {
+    nextPre(a) {
+        let fullcalendar = ( < any > $('#calendar'));
+        switch (a) {
+            case "n":
+                fullcalendar.fullCalendar('next');
+                break;
 
-      let _startDate, _endDate;
+            case "p":
+                fullcalendar.fullCalendar('prev');
+                break;
 
-      if (model.event.start) {_startDate = new FormControl(model.event.start._d)}
+            default:
+                alert("Please select next or previous")
+                break;
+        }
+    }
 
-      if (model.event.end) {
-        _endDate = new FormControl(model.event.end._d); 
-      }else{
-        _endDate = new FormControl(new Date(_startDate.value.getTime()));
-      }
+    eventClick(model: any) {
 
-      model = {event: {id: model.event.id, start: model.event.start, startDate: _startDate, end: model.event.end, endDate: _endDate, title: model.event.title, allDay: model.event.allDay, type: model.event.type }, duration: {} }
+        let _startDate, _endDate;
 
-      this.displayEvent = model;
-      this.openDialog(model.event);
+        if (model.start) {_startDate = model.start._d; }
 
-  }
+        if (model.end) {
+            _endDate = model.end._d;
+        } else {
+            _endDate = _startDate.getTime();
+        }
+
+        model = {
+            id: model.id,
+            start: model.start,
+            startDate: _startDate,
+            end: model.end,
+            endDate: model.end ? _endDate : '',
+            title: model.title,
+            allDay: model.allDay,
+            type: model.type
+        };
+        console.log(model);
+        this.openDialog(model);
+
+    }
 
 
-  eventResize(model: any, type: string) {
+    eventResize(model: any, type: string) {
+        model = this.initModel(model);
+        let eventData = JSON.parse(localStorage.getItem('eventData'));
+        eventData.forEach((o) => {
+            if (o.id == model.event.id) {
+                let start, end;
+                start = o.start;
+                end = model.event.end.format();
+                o.title = model.event.title;
+                o.start = start;
+                o.end = end;
+            }
+        });
+        localStorage.setItem('eventData', JSON.stringify(eventData));
+    }
 
-      model = this.initModel(model);
-      this.displayEvent = model;
-      let eventData = JSON.parse(localStorage.getItem('eventData'));
+    eventDrop(e) {
+        let eventData = JSON.parse(localStorage.getItem('eventData'));
+        eventData.forEach((o) => {
+            if (o.id == e.id) {
+                o.resourceId = e.resourceId;
+                o.start = Date.parse(e.start.format());
+                o.end = e.end ? Date.parse(e.end.format()) : null;
+            }
+        });
+        localStorage.setItem('eventData', JSON.stringify(eventData));
+    }
+    initModel(model) {
+        model = {
+            event: {
+                id: model.id,
+                start: model.start,
+                end: model.end,
+                title: model.title
+            }
+        };
+        return model
+    }
 
-      eventData.forEach((o) => {
-          if (o.id == model.event.id) {
-              let start, end, _duration = model.duration._data;
-                  start = o.start;
-                  end = this.updateDate(o.end, _duration);
-                  o.title = model.event.title;
-                  o.start = start;
-                  o.end = end;
-          }
-      });
-      localStorage.setItem('eventData', JSON.stringify(eventData));
-  }
-
-  updateEvent(model: any, type: string) {
-
-      model = this.initModel(model);
-
-      this.displayEvent = model;
-      let eventData = JSON.parse(localStorage.getItem('eventData'));
-
-      eventData.forEach((o) => {
-
-          if (o.id == model.event.id) {
-
-              let start, end, _duration = model.duration._data, _event = model.event;
-              if (!_event.end || _event.start._d.getTime() == _event.end._d.getTime()) {
-                  end = _event.start._d.setMinutes(_event.start._d.getMinutes()+30)
-              }
-                  start = this.updateDate(o.start, _duration);              
-                  end = this.updateDate(o.end, _duration);
-                  o.title = model.event.title;
-                  o.start = start;
-                  o.end = end;
-          }
-      });
-      localStorage.setItem('eventData', JSON.stringify(eventData));
-  }
-
-  updateDate(date, duration) {
-    let _date = new Date(date);
-    if (duration.milliseconds) _date.setMilliseconds(_date.getMilliseconds() + duration.milliseconds);
-    if (duration.seconds) _date.setSeconds(_date.getSeconds() + duration.seconds);
-    if (duration.minutes) _date.setMinutes(_date.getMinutes() + duration.minutes);
-    if (duration.hours) _date.setHours(_date.getHours() + duration.hours);
-    if (duration.days) _date.setDate(_date.getDate() + duration.days);
-    if (duration.months) _date.setMonth(_date.getMonth() + duration.months);
-
-    return _date;
-  }
-
-  initModel(model) {
-    model = {
-      event: {
-        id: model.event.id, 
-        start: model.event.start, 
-        end: model.event.end, 
-        title: model.event.title 
-      }, 
-      duration: {
-        _data: model.duration._data 
-      } 
-    };
-    return model
-  }
-
-  openDialog(model){
-    this.dialog.open(CalendarDialogComponent, {
-      data: model
-    });      
-  }
-  
-  clickButton(model: any) {
-    this.displayEvent = model;
-  }
+    openDialog(model) {
+        this.dialog.open(CalendarDialogComponent, {
+            data: model
+        });
+    }
 
 }

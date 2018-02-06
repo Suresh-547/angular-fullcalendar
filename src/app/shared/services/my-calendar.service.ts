@@ -4,14 +4,14 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class MyCalendarEvent {
 
-    public getEvents(): Observable<any> {
+    public getEvents() {
         let eventData = JSON.parse(localStorage.getItem('eventData'));
         eventData.forEach((o, i) => {
             o.color = this.eventColor(o.type)
             o.start = new Date(o.start);
             o.end = new Date(o.end);
         });
-        return Observable.of(eventData);
+        return eventData;
     }
 
     public newDate () {
@@ -24,47 +24,62 @@ export class MyCalendarEvent {
         return color;
     }
 
+    public getHeader() {
+        let data = {
+                left: '',
+                center: '',
+                right: ''
+              };
+        return data;
+    }
+
+    public getViews() {
+        let data = {
+              month: {
+                displayEventTime: false
+              }
+      };
+      return data;
+    }    
+
     public saveLocalStorage(){
-        var dateObj = new Date();
+
         let data: any = [{
-            id:1,
-            title: 'All Day Event',
-            start: this.newDate().setDate(this.newDate().getDate()),
-            end: this.newDate().setDate(this.newDate().getDate()+1),
-            allDay: false
-        },
-        {
-            id:2,
-            title: 'Long Event',
-            start: this.newDate().setDate(this.newDate().getDate()+2),
-            end: this.newDate().setDate(this.newDate().getDate()+3),
-            allDay: true
-        },
-        {
-            id: 3,
-            title: 'Repeating Event',
-            start: this.newDate().setDate(this.newDate().getDate()+3),
-            end: this.newDate().setDate(this.newDate().getDate()+3)
-        },
-       
-        {
-            id: 4,
-            title: 'Repeating Event',
-            start: this.newDate().setDate(this.newDate().getDate()+5),
-            end: this.newDate().setDate(this.newDate().getDate()+9)
-        },
-        {
-            id:5,
-            title: 'Conference',
-            start: this.newDate().setDate(this.newDate().getDate()-2),
-            end: this.newDate().setDate(this.newDate().getDate()-1)
-        },
-        {
-            id: 6,
-            title: 'Repeating Event',
-            start: this.newDate().setDate(this.newDate().getDate()+4),
-            end: this.newDate().setDate(this.newDate().getDate()+4)
-        }];
+                id: '1',
+                start: this.newDate().setMinutes(this.newDate().getMinutes()),
+                end: this.newDate().setMinutes(this.newDate().getMinutes()+700),
+                title: 'event 1'
+            },
+            {
+                id: '2',
+                start: this.newDate().setMinutes(this.newDate().getMinutes()+120),
+                end: this.newDate().setMinutes(this.newDate().getMinutes()+600),
+                title: 'event 2'
+            },
+            {
+                id: '3',
+                start: this.newDate().setMinutes(this.newDate().getMinutes()+10),
+                end: this.newDate().setMinutes(this.newDate().getMinutes()+500),
+                title: 'event 3'
+            },
+            {
+                id: '4',
+                start: this.newDate().setMinutes(this.newDate().getMinutes()+10),
+                end: this.newDate().setMinutes(this.newDate().getMinutes()+200),
+                title: 'event 4'
+            },
+            {
+                id: '5',
+                start: this.newDate().setMinutes(this.newDate().getMinutes()+10),
+                end: this.newDate().setMinutes(this.newDate().getMinutes()+200),
+                title: 'event 4'
+            },
+            {
+                id: '6',
+                start: this.newDate().getTime(),
+                end: this.newDate().setMinutes(this.newDate().getMinutes()+90),
+                title: 'Today Event'
+            }];
 
 
         let eventData = localStorage.getItem('eventData');

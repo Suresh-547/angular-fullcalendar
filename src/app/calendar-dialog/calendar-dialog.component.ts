@@ -15,7 +15,7 @@ export class CalendarDialogComponent implements OnInit {
    edit: boolean;
    calendarOptions;   
    time = {};  
-   myCalendar = $('ng-fullcalendar');
+   myCalendar = $('#calendar');
 
   constructor(    
     public dialogRef: MatDialogRef<CalendarDialogComponent>,
@@ -39,30 +39,34 @@ export class CalendarDialogComponent implements OnInit {
         let obj = {
           id: Date.now().toString(36)+"-"+Math.random().toString(36),
           title: addEvent.title,
-          start: addEvent.startDate.value.getTime(),
-          end: addEvent.endDate.value.getTime(),
+          start: addEvent.startDate.getTime(),
+          end: addEvent.endDate ? addEvent.endDate.getTime() : null,
+          type: addEvent.type,
+          allDay: addEvent.allDay,
           color:  this.eventService.eventColor(addEvent.type)
         };    
+
+        console.log(obj);
+        let obj2 = Object.assign({}, obj);        
         eventData.push(obj);
-        this.adMyEvent(obj); 
+        this.adMyEvent(obj2); 
       }else{
         eventData.forEach((obj) => {
           if (obj.id == this.data.id) {
 
              let startDate = this.data.startDate.value,
               endDate = this.data.endDate.value;
-
               obj.title = this.data.title; 
               obj.color = this.eventService.eventColor(this.data.type); 
-              obj.start = this.data.startDate.value.getTime(); 
-              obj.end = this.data.endDate.value.getTime();
+              obj.start = this.data.startDate.getTime(); 
+              obj.end = this.data.endDate ? this.data.endDate.getTime() : '';
               obj.type = this.data.type;
-              obj.allDay = false;    
-              this.updateEvent(obj); 
+              obj.allDay = this.data.allDay;    
+              let obj2 = Object.assign({}, obj);  
+              this.updateEvent(obj2);
           }
         });        
       }
-
       localStorage.setItem('eventData', JSON.stringify(eventData));        
   } 
 
@@ -97,5 +101,9 @@ export class CalendarDialogComponent implements OnInit {
   updateEvent(e) {
         this.dltEvent(e.id);
         this.adMyEvent(e);
+  }
+
+  checkAllDay() {
+    this.data.endDate = '';
   }
 }
