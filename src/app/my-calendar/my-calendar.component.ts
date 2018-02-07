@@ -19,6 +19,7 @@ export class MyCalendarComponent implements OnInit {
     calendarOptions;
     displayEvent: any;
     public calendarTitle: string;
+       public filterEvn:any;
 
     constructor(
         protected eventService: MyCalendarEvent,
@@ -172,5 +173,12 @@ export class MyCalendarComponent implements OnInit {
             data: model
         });
     }
+
+  //@ filter/serach event
+  filterEvent(filter) {
+    let fullcalendar = (<any>$('#calendar'));
+    this.filterEvn = filter;
+    fullcalendar.fullCalendar( 'refetchEvents');
+  }    
 
 }

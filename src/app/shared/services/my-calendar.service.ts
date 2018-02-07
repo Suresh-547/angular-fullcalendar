@@ -13,7 +13,10 @@ export class MyCalendarEvent {
             header: _ths.getHeader(),
             height: 640,
             views: _ths.getViews(),
-            events: _ths.getEvents(),
+            // events: _ths.getEvents(),
+            events(start, end, timezone, callback) {
+                callback(_ths.getEvents(_this.filterEvn));
+            },            
             viewRender(view) {
                 _this.calendarTitle = view.title.replace(/undefined/g, '');
             },
@@ -32,7 +35,7 @@ export class MyCalendarEvent {
         }
     }
 
-    public getEvents() {
+    public getEvents(filter) {
 
         //@ fetch data from localstorage
         //@ In real scenario this will come from API        
@@ -42,6 +45,12 @@ export class MyCalendarEvent {
             o.start = new Date(o.start);
             o.end = new Date(o.end);
         });
+
+        //@ filter events
+        if (filter) {
+            let regEx = new RegExp(filter, 'i');
+            eventData = eventData.filter(r =>  r.title.match(regEx));
+        }        
         return eventData;
     }
 
