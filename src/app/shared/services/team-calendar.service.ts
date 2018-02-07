@@ -24,30 +24,30 @@ export class MyTeamCalendarEvent {
             groupByResource: false,
             resourceLabelText: "Resources",
             resourceOrder: '-title',
-            events: function(start, end, timezone, callback) {
+            events(start, end, timezone, callback) {
                 callback(_ths.getTeamEvents(_this.filterEvn));
             },
-            resources: function(callback) {
+            resources(callback) {
                 callback(_ths.getTeamResourceData(_this.filterRes));
             },
-            resourceRender: function(resource, cellEls) {
-                cellEls.on('click', function() {
+            resourceRender(resource, cellEls) {
+                cellEls.on('click', () => {
                     alert(resource.title);
                 });
             },
-            viewRender: function(view) {
+            viewRender(view) {
                 _this.calendarTitle = view.title;
             },
-            eventClick: function(calEvent, jsEvent, view) {
+            eventClick(calEvent, jsEvent, view) {
                 _this.editEvent(calEvent);
             },
-            eventResize: function(event, delta, revertFunc) {
+            eventResize(event, delta, revertFunc) {
                 _this.resizeEvent(event);
             },
-            eventDrop: function(event, delta, revertFunc) {
+            eventDrop(event, delta, revertFunc) {
                 _this.eventDrop(event);
             },
-            dayClick: function(date, jsEvent, view) {
+            dayClick(date, jsEvent, view) {
                 _this.addEvent(date);
             }
         }

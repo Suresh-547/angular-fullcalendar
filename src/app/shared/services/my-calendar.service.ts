@@ -14,19 +14,19 @@ export class MyCalendarEvent {
             height: 640,
             views: _ths.getViews(),
             events: _ths.getEvents(),
-            viewRender: function(view) {
+            viewRender(view) {
                 _this.calendarTitle = view.title.replace(/undefined/g, '');
             },
-            eventClick: function(calEvent, jsEvent, view) {
+            eventClick(calEvent, jsEvent, view) {
                 _this.eventClick(calEvent);
             },
-            eventResize: function(event, delta, revertFunc) {
+            eventResize(event, delta, revertFunc) {
                 _this.eventResize(event, '')
             },
-            eventDrop: function(event, delta, revertFunc) {
+            eventDrop(event, delta, revertFunc) {
                 _this.eventDrop(event);
             },
-            dayClick: function(date, jsEvent, view) {
+            dayClick(date, jsEvent, view) {
                 _this.addEvent(date);
             }            
         }

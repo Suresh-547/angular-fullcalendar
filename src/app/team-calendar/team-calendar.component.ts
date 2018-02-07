@@ -32,14 +32,16 @@ export class TeamCalendarComponent implements OnInit {
     const _this = this;
     const calendar = (<any>$('#calendar'));
     this.teamEventService.saveLocalStorage();
-    calendar.fullCalendar(this.teamEventService.calendarObject(this));   
+    calendar.fullCalendar(this.teamEventService.calendarObject(this));  
  
   }    
 
+  //@ go to today view
   todayView () {
     this.changeView(new Date());
   }
 
+  //@ change view from dropdown menu
   changeView (date) {
 
     let fullcalendar = (<any>$('#calendar'));
@@ -76,6 +78,7 @@ export class TeamCalendarComponent implements OnInit {
     }
   }
 
+  //@ move calendar to next and previous date
   nextPre (a) {
     let fullcalendar = (<any>$('#calendar'));
     switch (a) {
@@ -93,10 +96,12 @@ export class TeamCalendarComponent implements OnInit {
     }
   } 
 
+  //@ open dialog and pass object
   openDialog(o) {
     this.openedDialog =  this.dialog.open(TeamCalendarDialogComponent, o);
   }
 
+  //@ add new event 
   addEvent(date) {
     setTimeout(() => {
         let isOpened = document.getElementsByClassName('mat-dialog-container');
@@ -117,6 +122,7 @@ export class TeamCalendarComponent implements OnInit {
     }, 50);
   } 
 
+  //@ edit event 
   editEvent(calEvent) {
     calEvent.edit = true;
     calEvent.new = false;
@@ -130,6 +136,7 @@ export class TeamCalendarComponent implements OnInit {
     this.openDialog(obj);
   }
 
+  //@ resize event
   resizeEvent(e) {
      let teamEventData = this.getTeamEventData();
      teamEventData.forEach((o) => {
@@ -140,6 +147,7 @@ export class TeamCalendarComponent implements OnInit {
      this.setTeamEventData(teamEventData);
   }
 
+  //@ drag and drop event
   eventDrop(e) {
      let teamEventData = this.getTeamEventData();
      teamEventData.forEach((o) => {
@@ -152,41 +160,48 @@ export class TeamCalendarComponent implements OnInit {
      this.setTeamEventData(teamEventData);
   }
 
+  //@ fetch local events data from localstorage
   private getTeamEventData() {
     let data = JSON.parse(localStorage.getItem('teamEventData'));
     return data;
   }
 
+  //@ update local events data from localstorage
   private setTeamEventData(data) {
     localStorage.setItem('teamEventData', JSON.stringify(data));
   }
 
+  //@ fetch local resource data from localstorage
   private getResourceData () {
     let data = JSON.parse(localStorage.getItem('teamResourceData'));
     return data;
   }
 
+  //@ update local resource data from localstorage
   private setResourceData(data) {
     localStorage.setItem('teamResourceData', JSON.stringify(data));
   }
 
+  //@ change view mode
   verticleResource () {
     this.horizontal = false;
     this.changeView('');
   }
 
-
+  //@ change view mode
   horizontalResource() {
     this.horizontal = true;
     this.changeView('');
   }
 
+  //@ filter/serach resource
   filterResource(filter) {
     let fullcalendar = (<any>$('#calendar'));
     this.filterRes = filter;
     fullcalendar.fullCalendar( 'refetchResources');
   }
 
+  //@ filter/serach event
   filterEvent(filter) {
     let fullcalendar = (<any>$('#calendar'));
     this.filterEvn = filter;
