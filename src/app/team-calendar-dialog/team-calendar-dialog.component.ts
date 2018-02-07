@@ -24,7 +24,6 @@ export class TeamCalendarDialogComponent implements OnInit {
         protected eventService: MyCalendarEvent) {}
 
     ngOnInit() {
-
     }
 
     closeDialog(): void {
@@ -91,7 +90,7 @@ export class TeamCalendarDialogComponent implements OnInit {
         this.addNewEvent(e);
     }
 
-  checkAllDay() {
+    checkAllDay() {
     this.data.end = '';
-  }    
+    }    
 }

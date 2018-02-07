@@ -18,6 +18,8 @@ export class TeamCalendarComponent implements OnInit {
    private openedDialog;
    private horizontal: boolean = false;
    public calendarTitle;
+   public filterRes:any;
+   public filterEvn:any;
 
   constructor(
     protected teamEventService: MyTeamCalendarEvent, 
@@ -29,9 +31,7 @@ export class TeamCalendarComponent implements OnInit {
 
     const _this = this;
     const calendar = (<any>$('#calendar'));
-
     this.teamEventService.saveLocalStorage();
-
     calendar.fullCalendar({
       editable: true,
       scrollTime: '00:00',
@@ -40,10 +40,17 @@ export class TeamCalendarComponent implements OnInit {
       defaultView: 'timelineDay',
       height: 640,
       views: this.teamEventService.getViews(),
-      resources: this.teamEventService.getTeamResourceData(),
-      events: this.teamEventService.getTeamEvents(),
+      refetchResourcesOnNavigate: true,
       resourceAreaWidth: "15%",
       groupByResource: false,
+      resourceLabelText: "Resources",
+      resourceOrder: '-title',
+      events: function(start, end, timezone, callback) {
+        callback(_this.teamEventService.getTeamEvents(_this.filterEvn));
+      },
+      resources: function(callback) {
+              callback(_this.teamEventService.getTeamResourceData(_this.filterRes));
+      },
       resourceRender: function(resource, cellEls) {
         cellEls.on('click', function() {
           alert(resource.title);
@@ -140,7 +147,7 @@ export class TeamCalendarComponent implements OnInit {
                 type: '',
                 start: new Date(date.format()),
                 end: '',
-                resources: this.teamEventService.getTeamResourceData(),
+                resources: this.teamEventService.getTeamResourceData(0),
                 resourceId:""
               }
             };
@@ -154,7 +161,7 @@ export class TeamCalendarComponent implements OnInit {
     calEvent.new = false;
     calEvent.start = new Date(calEvent.start);
     calEvent.end = calEvent.allDay ? '' : new Date(calEvent.end);
-    calEvent.resources = this.teamEventService.getTeamResourceData();
+    calEvent.resources = this.teamEventService.getTeamResourceData(0);
 
     let obj = {
       data: calEvent
@@ -184,13 +191,22 @@ export class TeamCalendarComponent implements OnInit {
      this.setTeamEventData(teamEventData);
   }
 
-  getTeamEventData() {
+  private getTeamEventData() {
     let data = JSON.parse(localStorage.getItem('teamEventData'));
     return data;
   }
 
-  setTeamEventData(data) {
+  private setTeamEventData(data) {
     localStorage.setItem('teamEventData', JSON.stringify(data));
+  }
+
+  private getResourceData () {
+    let data = JSON.parse(localStorage.getItem('teamResourceData'));
+    return data;
+  }
+
+  private setResourceData(data) {
+    localStorage.setItem('teamResourceData', JSON.stringify(data));
   }
 
   verticleResource () {
@@ -204,4 +220,15 @@ export class TeamCalendarComponent implements OnInit {
     this.changeView('');
   }
 
+  filterResource(filter) {
+    let fullcalendar = (<any>$('#calendar'));
+    this.filterRes = filter;
+    fullcalendar.fullCalendar( 'refetchResources');
+  }
+
+  filterEvent(filter) {
+    let fullcalendar = (<any>$('#calendar'));
+    this.filterEvn = filter;
+    fullcalendar.fullCalendar( 'refetchEvents');
+  }
  }

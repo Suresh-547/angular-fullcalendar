@@ -7,9 +7,15 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class MyTeamCalendarEvent {
 
-    public getTeamEvents() {
+    public getTeamEvents(filter) {
+
+        //@ fetch data from localstorage
+        //@ In real scenario this will come from API
         let data = JSON.parse(localStorage.getItem('teamEventData'));
-        data.forEach((o) => {
+
+        //@ convert timestamp to date object
+        data.forEach((o, i, obj) => {
+
             if (typeof o.start == 'number') {
                 o.start = new Date(o.start)
             }
@@ -17,63 +23,92 @@ export class MyTeamCalendarEvent {
             if (typeof o.end == 'number') {
                 o.end = new Date(o.end)
             }
+
         });
+
+        //@ filter events
+        if (filter) {
+            let regEx = new RegExp(filter, 'i');
+            data = data.filter(r =>  r.title.match(regEx));
+        }
 
         return data;
     }
 
-    public getTeamResourceData() {
-        let data = JSON.parse(localStorage.getItem('teamResourceData'));
+    public getTeamResourceData(filter) {
+
+        //@ fetch data from localstorage
+        //@ In real scenario this will come from API
+        var data = JSON.parse(localStorage.getItem('teamResourceData'));
+
+        //@ filter resources
+        if (filter) {
+            let regEx = new RegExp(filter, 'i');
+            data = JSON.parse(localStorage.getItem('teamResourceData'));
+            data = data.filter(r =>  r.title.match(regEx));
+        }
+
         return data;
+    }
+
+
+    public getViews() {
+
+        //@ customize views
+        let data = {
+            timelineThreeDays: {
+              type: 'agenda',
+              duration: { days: 3 },
+              groupByResource: true
+            },
+            timelineThreeDaysH: {
+              type: 'timeline',
+              duration: { days: 3 },
+              groupByResource: true
+            },
+              month: {
+                displayEventTime: false,
+              }                
+          };
+      return data;
     }
 
     public getHeader() {
+
+        //@ header for calendar 
+        //@ we have added custom header 
+        //@ so passing blank empty
         let data = {
                 left: '',
-                center: '',
                 right: ''
               };
         return data;
     }
-
-    public getViews() {
-        let data = {
-        timelineThreeDays: {
-          type: 'agenda',
-          duration: { days: 3 },
-          groupByResource: true
-        },
-        timelineThreeDaysH: {
-          type: 'timeline',
-          duration: { days: 3 },
-          groupByResource: true
-        },
-          month: {
-            displayEventTime: false,
-            // groupByResource: true
-          }                
-      };
-      return data;
-    }
-
+    //@ common method to get current date
     public newDate () {
         let dateObj = new Date();
-        // dateObj.setMinutes(dateObj.getMinutes()+ 330);
         return dateObj;
     }
 
     public saveLocalStorage() {
 
+        //@ save events data
+        //@ In real scenario this will come from API        
         if (!localStorage.getItem('teamEventData')) {
             localStorage.setItem('teamEventData', JSON.stringify(this.eventData()));
         }
 
+        //@ save resource data
+        //@ In real scenario this will come from API        
         if (!localStorage.getItem('teamResourceData')) {
             localStorage.setItem('teamResourceData', JSON.stringify(this.resourceData()));
         }
     }
 
     public eventData () {
+
+        //@ demo event data 
+        //@ In real scenario this will come from API        
         let data: any = [{
                 id: '1',
                 resourceId: 'b',
@@ -121,6 +156,10 @@ export class MyTeamCalendarEvent {
     }
 
     private resourceData () {
+
+        //@ demo resource data 
+        //@ In real scenario this will come from API 
+                
         let data: any = [{
                 id: 'a',
                 title: 'Jitendra Rajput'
