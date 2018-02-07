@@ -19,7 +19,6 @@ export class MyCalendarComponent implements OnInit {
     calendarOptions;
     displayEvent: any;
     public calendarTitle: string;
-    // private pickStartDate: Date;
 
     constructor(
         protected eventService: MyCalendarEvent,
@@ -29,16 +28,13 @@ export class MyCalendarComponent implements OnInit {
 
     ngOnInit() {
 
-
         const _ths = this;
-
         const calendar = ( < any > $('#calendar'));
-
         this.eventService.saveLocalStorage();
-
         calendar.fullCalendar(this.eventService.calendarObject(this));
     }
 
+    //@ add new event 
     addEvent(date) {
         let isOpened = document.getElementsByClassName('mat-dialog-container');
         if (isOpened.length == 0) {
@@ -53,10 +49,12 @@ export class MyCalendarComponent implements OnInit {
         }
     }
 
+  //@ go to today view
     todayView() {
         this.changeView(new Date());
     }
 
+  //@ change view from dropdown menu
     changeView(date) {
 
         let fullcalendar = ( < any > $('#calendar'));
@@ -79,6 +77,7 @@ export class MyCalendarComponent implements OnInit {
         }
     }
 
+  //@ move calendar to next and previous date
     nextPre(a) {
         let fullcalendar = ( < any > $('#calendar'));
         switch (a) {
@@ -96,6 +95,7 @@ export class MyCalendarComponent implements OnInit {
         }
     }
 
+    //@ edit event
     eventClick(model: any) {
 
         let _startDate, _endDate;
@@ -123,7 +123,7 @@ export class MyCalendarComponent implements OnInit {
 
     }
 
-
+    //@ resize event
     eventResize(model: any, type: string) {
         model = this.initModel(model);
         let eventData = JSON.parse(localStorage.getItem('eventData'));
@@ -140,6 +140,7 @@ export class MyCalendarComponent implements OnInit {
         localStorage.setItem('eventData', JSON.stringify(eventData));
     }
 
+    //@ drag and drop event
     eventDrop(e) {
         let eventData = JSON.parse(localStorage.getItem('eventData'));
         eventData.forEach((o) => {
@@ -151,6 +152,8 @@ export class MyCalendarComponent implements OnInit {
         });
         localStorage.setItem('eventData', JSON.stringify(eventData));
     }
+
+
     initModel(model) {
         model = {
             event: {
@@ -163,6 +166,7 @@ export class MyCalendarComponent implements OnInit {
         return model
     }
 
+  //@ open dialog and pass object
     openDialog(model) {
         this.dialog.open(CalendarDialogComponent, {
             data: model
