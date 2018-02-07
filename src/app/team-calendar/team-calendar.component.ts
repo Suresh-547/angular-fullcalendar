@@ -32,46 +32,7 @@ export class TeamCalendarComponent implements OnInit {
     const _this = this;
     const calendar = (<any>$('#calendar'));
     this.teamEventService.saveLocalStorage();
-    calendar.fullCalendar({
-      editable: true,
-      scrollTime: '00:00',
-      schedulerLicenseKey: "7894561586-fcs-7412589635",
-      header: this.teamEventService.getHeader(),
-      defaultView: 'timelineDay',
-      height: 640,
-      views: this.teamEventService.getViews(),
-      refetchResourcesOnNavigate: true,
-      resourceAreaWidth: "15%",
-      groupByResource: false,
-      resourceLabelText: "Resources",
-      resourceOrder: '-title',
-      events: function(start, end, timezone, callback) {
-        callback(_this.teamEventService.getTeamEvents(_this.filterEvn));
-      },
-      resources: function(callback) {
-              callback(_this.teamEventService.getTeamResourceData(_this.filterRes));
-      },
-      resourceRender: function(resource, cellEls) {
-        cellEls.on('click', function() {
-          alert(resource.title);
-        });
-      },
-      viewRender: function(view) {
-        _this.calendarTitle = view.title;
-      },      
-      eventClick: function(calEvent, jsEvent, view) {
-          _this.editEvent(calEvent);
-      },
-      eventResize: function(event, delta, revertFunc) {
-          _this.resizeEvent(event);
-      },
-      eventDrop: function(event, delta, revertFunc) {
-          _this.eventDrop(event);
-      },
-      dayClick: function(date, jsEvent, view) {
-          _this.addEvent(date);
-      }                 
-    });   
+    calendar.fullCalendar(this.teamEventService.calendarObject(this));   
  
   }    
 

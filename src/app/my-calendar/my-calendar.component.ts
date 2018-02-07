@@ -36,29 +36,7 @@ export class MyCalendarComponent implements OnInit {
 
         this.eventService.saveLocalStorage();
 
-        calendar.fullCalendar({
-            editable: true,
-            schedulerLicenseKey: "7894561586-fcs-7412589635",
-            header: this.eventService.getHeader(),
-            height: 640,
-            views: this.eventService.getViews(),
-            events: this.eventService.getEvents(),
-            viewRender: function(view) {
-                _ths.calendarTitle = view.title.replace(/undefined/g, '');
-            },
-            eventClick: function(calEvent, jsEvent, view) {
-                _ths.eventClick(calEvent);
-            },
-            eventResize: function(event, delta, revertFunc) {
-                _ths.eventResize(event, '')
-            },
-            eventDrop: function(event, delta, revertFunc) {
-                _ths.eventDrop(event);
-            },
-            dayClick: function(date, jsEvent, view) {
-                _ths.addEvent(date);
-            }            
-        });
+        calendar.fullCalendar(this.eventService.calendarObject(this));
     }
 
     addEvent(date) {

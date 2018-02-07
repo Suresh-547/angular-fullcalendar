@@ -4,7 +4,38 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class MyCalendarEvent {
 
+    //@ calendar object
+    public calendarObject(_this) {
+        let _ths = this;
+        return {
+            editable: true,
+            schedulerLicenseKey: "7894561586-fcs-7412589635",
+            header: _ths.getHeader(),
+            height: 640,
+            views: _ths.getViews(),
+            events: _ths.getEvents(),
+            viewRender: function(view) {
+                _this.calendarTitle = view.title.replace(/undefined/g, '');
+            },
+            eventClick: function(calEvent, jsEvent, view) {
+                _this.eventClick(calEvent);
+            },
+            eventResize: function(event, delta, revertFunc) {
+                _this.eventResize(event, '')
+            },
+            eventDrop: function(event, delta, revertFunc) {
+                _this.eventDrop(event);
+            },
+            dayClick: function(date, jsEvent, view) {
+                _this.addEvent(date);
+            }            
+        }
+    }
+
     public getEvents() {
+
+        //@ fetch data from localstorage
+        //@ In real scenario this will come from API        
         let eventData = JSON.parse(localStorage.getItem('eventData'));
         eventData.forEach((o, i) => {
             o.color = this.eventColor(o.type)
@@ -14,6 +45,7 @@ export class MyCalendarEvent {
         return eventData;
     }
 
+    //@ common method to get current date
     public newDate () {
         let dateObj = new Date();
         return dateObj;
@@ -24,6 +56,9 @@ export class MyCalendarEvent {
         return color;
     }
 
+    //@ header for calendar 
+    //@ we have added custom header 
+    //@ so passing blank empty
     public getHeader() {
         let data = {
                 left: '',
@@ -34,6 +69,7 @@ export class MyCalendarEvent {
     }
 
     public getViews() {
+        //@ customize views        
         let data = {
               month: {
                 displayEventTime: false
@@ -44,7 +80,20 @@ export class MyCalendarEvent {
 
     public saveLocalStorage(){
 
-        let data: any = [{
+        //@ save events data
+        //@ In real scenario this will come from API  
+
+        let eventData = localStorage.getItem('eventData');
+        if (!eventData) {
+            localStorage.setItem('eventData', JSON.stringify(this.localData()));        
+        }
+    }
+
+    private localData() {
+
+        //@ save events data
+        //@ In real scenario this will come from API         
+        return [{
                 id: '1',
                 start: this.newDate().setMinutes(this.newDate().getMinutes()),
                 end: this.newDate().setMinutes(this.newDate().getMinutes()+700),
@@ -79,12 +128,6 @@ export class MyCalendarEvent {
                 start: this.newDate().getTime(),
                 end: this.newDate().setMinutes(this.newDate().getMinutes()+90),
                 title: 'Today Event'
-            }];
-
-
-        let eventData = localStorage.getItem('eventData');
-        if (!eventData) {
-            localStorage.setItem('eventData', JSON.stringify(data));        
-        }
+            }];        
     }
 };
