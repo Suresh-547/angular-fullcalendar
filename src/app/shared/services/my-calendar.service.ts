@@ -1,19 +1,23 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+
+import { Constants } from "./constants";
+
 @Injectable()
+
 export class MyCalendarEvent {
 
     //@ calendar object
     public calendarObject(_this) {
+
         let _ths = this;
         return {
             editable: true,
-            schedulerLicenseKey: "7894561586-fcs-7412589635",
+            schedulerLicenseKey: Constants.SCHEDULER_LICENSE_KEY,
             header: _ths.getHeader(),
             height: 640,
             views: _ths.getViews(),
-            // events: _ths.getEvents(),
             events(start, end, timezone, callback) {
                 callback(_ths.getEvents(_this.filterEvn));
             },            

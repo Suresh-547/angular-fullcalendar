@@ -3,6 +3,8 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/observable/of';
+import { Constants } from "./constants";
+
 
 @Injectable()
 export class MyTeamCalendarEvent {
@@ -14,7 +16,7 @@ export class MyTeamCalendarEvent {
         return {
             editable: true,
             scrollTime: '00:00',
-            schedulerLicenseKey: "7894561586-fcs-7412589635",
+            schedulerLicenseKey: Constants.SCHEDULER_LICENSE_KEY,
             header: _ths.getHeader(),
             defaultView: 'timelineDay',
             height: 640,
